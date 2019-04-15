@@ -53,10 +53,10 @@ $signupSubmit.on("click", function(event) {
         $("#passwordMatch").text("Your passwords don't match!");
     } else {
         var signup = {
-            username: $("#usernameLogin")
+            username: $("#usernameSignup")
                 .val()
                 .trim(),
-            password: $("#passwordLogin")
+            password: $("#userPasswordSignup")
                 .val()
                 .trim()
         };
