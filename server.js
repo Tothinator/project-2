@@ -29,8 +29,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-require("./routes/apiRoutes")(app);
-require("./routes/htmlRoutes")(app);
+var routes = require("./controller/controller.js");
+app.use(routes);
 
 var syncOptions = { force: false };
 
