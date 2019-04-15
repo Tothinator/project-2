@@ -52,6 +52,7 @@ $signupSubmit.on("click", function(event) {
     if (pass1 !== pass2) {
         $("#passwordMatch").text("Your passwords don't match!");
     } else {
+        console.log($("#passwordLogin").val());
         var signup = {
             username: $("#usernameLogin")
                 .val()

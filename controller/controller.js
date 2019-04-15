@@ -1,8 +1,9 @@
 var express = require("express");
 var db = require("../models");
 var passport = require("../config/passport");
+var isAuthenticated = require("../config/middleware/isAuthenticated");
 
-var router = express.Router()
+var router = express.Router();
 
 
 
@@ -27,7 +28,6 @@ router.get("/login", function(req, res) {
 
 });
 
-
 router.get("/members", isAuthenticated, function(req, res) {
 
     res.render("members");
@@ -42,14 +42,13 @@ router.get("*", function(req, res) {
 
 
 //API ROUTES======================================================================================================
-// Get all examples
 router.post("/api/login", passport.authenticate("local"), function(req, res) {
     res.json("/members");
 });
 
-// Create a new example
 router.post("/api/signup", function(req, res) {
-    console.log(req.body);
+    console.log(req.body.username);
+    console.log(req.body.password);
     db.User.create({
         username: req.body.username,
         password: req.body.password
