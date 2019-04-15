@@ -1,5 +1,5 @@
 
-var exphbs = require("express-handlebars");
+// var exphbs = require("express-handlebars");
 
 module.exports = function(app) {
     // Load index page
