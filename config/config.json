@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "toth",
-    "password": "bootcamp",
-    "database": "project2_db",
+    "username": "root",
+    "password": null,
+    "database": "exampledb",
     "host": "localhost",
     "dialect": "mysql"
   },
