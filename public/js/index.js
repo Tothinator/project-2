@@ -54,10 +54,10 @@ $signupSubmit.on("click", function(event) {
     } else {
         console.log($("#passwordLogin").val());
         var signup = {
-            username: $("#usernameLogin")
+            username: $("#usernameSignup")
                 .val()
                 .trim(),
-            password: $("#passwordLogin")
+            password: $("#userPasswordSignup")
                 .val()
                 .trim()
         };
