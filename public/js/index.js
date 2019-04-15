@@ -4,6 +4,72 @@ var $exampleDescription = $("#example-description");
 var $submitBtn = $("#submit");
 var $exampleList = $("#example-list");
 
+var $loginForm = $("#login-btn");
+var $signupForm = $("#signup-btn");
+var $loginSubmit = $("#login-submit");
+var $signupSubmit = $("#signup-submit");
+
+$loginForm.on("click", function() {
+  $("#signup-form").hide();
+  $("#login-form").show();
+});
+
+$signupForm.on("click", function() {
+  $("#login-form").hide();
+  $("#signup-form").show();
+});
+
+$loginSubmit.on("click", function(event) {
+  event.preventDefault();
+
+  var login = {
+    username: $("#usernameLogin")
+      .val()
+      .trim(),
+    password: $("#userPasswordLogin")
+      .val()
+      .trim()
+  };
+
+  $.ajax("/api/login", {
+    method: "POST",
+    data: login
+  }).then(function() {
+    location.reload();
+  });
+});
+
+$signupSubmit.on("click", function(event) {
+  event.preventDefault();
+
+  var pass1 = $("#userPasswordSignup")
+    .val()
+    .trim();
+  var pass2 = $("#confirmPassword")
+    .val()
+    .trim();
+
+  if (pass1 !== pass2) {
+    $("#passwordMatch").text("Your passwords don't match!");
+  } else {
+    var signup = {
+      username: $("#usernameLogin")
+        .val()
+        .trim(),
+      password: $("#passwordLogin")
+        .val()
+        .trim()
+    };
+
+    $.ajax("/api/signup", {
+      method: "POST",
+      data: signup
+    }).then(function() {
+      location.reload();
+    });
+  }
+});
+
 // The API object contains methods for each kind of request we'll make
 var API = {
   saveExample: function(example) {
