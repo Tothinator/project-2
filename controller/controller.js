@@ -21,19 +21,6 @@ router.get("/", function(req, res) {
     });
 });
 
-// Load example page and pass in an example by id
-// router.get("/login", function(req, res) {
-//     //Session exists for the user
-//     console.log(req.user);
-//     if (req.user) {
-//         return res.redirect("/members");
-//     }
-
-//     //Else render the login.handlbars
-//     res.render("index");
-
-// });
-
 router.get("/members", isAuthenticated, function(req, res) {
     console.log("reaching member page");
     res.render("members");
@@ -61,7 +48,6 @@ router.post("/api/signup", function(req, res) {
         username: req.body.username,
         password: req.body.password
     }).then(function() {
-      
         res.redirect(307, "/api/login");
     }).catch(function(err) {
         console.log("Getting error");
