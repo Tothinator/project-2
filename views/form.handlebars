@@ -42,14 +42,37 @@
         </div>
     </div>
     <h3 id="click">Result</h3>
-    <div id="result"></div>
+    <div id="result">
+        {{!-- <div>
+            {{#each result}}
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{calories}}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            {{/each}}
+        </div> --}}
+    </div>
 </div>
-
+{{!-- 0:
+calories: 2643.1901685250004
+dietLabels: ["Low-Carb"]
+healthLabels: (3) ["Peanut-Free", "Tree-Nut-Free", "Alcohol-Free"]
+image: "https://www.edamam.com/web-img/d4b/d4bb1e6c7a6c3738d8e01707eb0ad83d.jpg"
+ingredientLines: (6) ["1 chicken, about 3.5 to 4 pounds", "1 lemon", "1 blood orange", "1 tangerine or clementine", "Kosher salt", "1/2 cup chicken broth"]
+label: "Citrus Roasted Chicken"
+totalTime: 424
+url: "https://food52.com/recipes/3403-citrus-roasted-chicken"
+yield: 4
+__proto__: Object --}}
 <script>
 $(function(){
     var arr = [];
     var object={};
-
+    var newObject={};
     $("#accordion").accordion();
     $("#submit").on("click", function(e){
         $("#click").click();
@@ -58,6 +81,7 @@ $(function(){
             url:"https://api.edamam.com/search?q=chicken&app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=3&calories=591-722&health=alcohol-free",
             method: "GET"
         }).then(function(data) {
+            console.log(data);
           
             for (var i = 0; i < data.hits.length; i ++){
                 object = {
@@ -72,10 +96,9 @@ $(function(){
                     "totalTime": data.hits[i].recipe.totalTime
                 };
                 arr.push(object);
-            };
+            }
 
             for (var i=0;i<arr.length;i++)  {
-                
                 var div=$("<div>").addClass("card").attr("style","width:18rem");
                 
                 var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);
@@ -98,9 +121,33 @@ $(function(){
                 div.append(img).append(innerdiv);
                 
                 $("#result").append(div);
-            };
+            }
+            
+       //     newObject={
+       ////         abc:arr
+               // abc:1234
+       //     }
+      //      //$.ajax("/api/meals",{
+           //     method:"POST",
+          //      data:
+           // }).then(function(data){
+                
+           // });
+       //    $.post("/api/meals",newObject).then(function(data){
+       //        console.log(data);
+          // })
         });
    });
+    //$.ajax({
+//type: 'GET',
+//url: "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?excludeIngredients=coconut&intolerances=egg%2C+gluten&number=10&offset=0&type=main+course&query=burger",
+// headers: {
+//     "X-RapidAPI-Host":"spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+//    "X-RapidAPI-Key":"7aac7f7ddcmsh1b8ceb5b1d42d3dp1e06fdjsnef3530774afd"
+// }
+//  }).done(function(data) { 
+// console.log(data); 
+// })
 });
     
 </script>
