@@ -23,7 +23,7 @@ router.get("/", function(req, res) {
 
 router.get("/members", isAuthenticated, function(req, res) {
     console.log("reaching member page");
-    res.render("members");
+    res.render("members", {user: req.user.username});
 
 });
 
