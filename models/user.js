@@ -13,6 +13,13 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
+    User.associate = function(models) {
+        // Associating Users with Meals through Junction Tables Faves and Days
+        models.User.belongsToMany(models.Meal, {through: models.Favorite} );
+
+        models.User.belongsToMany(models.Meal, {through: models.Day} );
+    };
+
     User.prototype.validPassword = function(password) {
         return bcrypt.compareSync(password, this.password);
     };   
