@@ -1,0 +1,156 @@
+<div id="accordion">
+    <h3>Find your Recipe</h3>
+    <div>
+        <fieldset>
+            <legend>Cuisine</legend>
+            <ul>
+                <li>
+                    <label for="food" class="title">foodname</label>
+                    <input type="text" size="40" id="food" required>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>Option</legend>
+            <ul>
+                <li>
+                    <label for="diet">Diet:
+                        <select id="diet">
+                            <option value=""></option>
+                            <option value="balanced">balanced</option>
+                            <option value="high protein">high protein</option>
+                            <option value="low-fat">low-fat</option>
+                            <option value="low-carb">low-carb</option>
+                        </select>
+                    </label>
+                </li>
+                <li>
+                    <label for="health">Health : <br>
+                        <input type="checkbox" id="vegan">vegan
+                        <input type="checkbox" id="vegetarian">vegetarian
+                        <input type="checkbox" id="sugar-conscious">sugar-conscious<br>
+                        <input type="checkbox" id="peanut-free">peanut-free
+                        <input type="checkbox" id="tree-nut-free">tree-nut-free
+                        <input type="checkbox" id="alcohol-free">alcohol-free
+                    </label>
+                </li>
+            </ul>
+        </fieldset>
+        <div class="centered">
+            <input type="submit" id ="submit" value="Let's cook">
+            <input type="reset" value="reset">
+        </div>
+    </div>
+    <h3 id="click">Result</h3>
+    <div id="result"></div>
+</div>
+
+<script>
+$(function(){
+    var arr = [];
+    var object={};
+
+    $("#accordion").accordion();
+    $("#submit").on("click", function(e){
+        $("#click").click();
+        e.preventDefault;
+        $.ajax({
+            url:"https://api.edamam.com/search?q=chicken&app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=3&calories=591-722&health=alcohol-free",
+            method: "GET"
+        }).then(function(data) {
+          
+            for (var i = 0; i < data.hits.length; i ++){
+                object = {
+                    "image": data.hits[i].recipe.image,
+                    "label": data.hits[i].recipe.label,
+                    "url": data.hits[i].recipe.url,
+                    "yield": data.hits[i].recipe.yield,
+                    "dietLabels": data.hits[i].recipe.dietLabels,
+                    "healthLabels": data.hits[i].recipe.healthLabels,
+                    "ingredientLines": data.hits[i].recipe.ingredientLines,
+                    "calories": data.hits[i].recipe.calories,
+                    "totalTime": data.hits[i].recipe.totalTime
+                };
+                arr.push(object);
+            };
+
+            for (var i=0;i<arr.length;i++)  {
+                
+                var div=$("<div>").addClass("card").attr("style","width:18rem");
+                
+                var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);
+                
+                var innerdiv=$("<div>").addClass("card-body");
+                
+                var title=$("<h5>").addClass("card-title").attr(arr[i].label);
+                    
+                var yield=$("<p>").addClass("card-text").attr(arr[i].yield);
+                var time=$("<p>").addClass("card-text").attr(arr[i].totalTime);
+                var calories=$("<p>").addClass("card-text").attr(arr[i].calories);
+                var ingredients=$("<p>").addClass("card-text").attr(arr[i].ingredientLines);
+                var dietLabels=$("<p>").addClass("card-text").attr(arr[i].dietLabels);
+                var healthLabels=$("<p>").addClass("card-text").attr(arr[i].healthLabels);
+                
+                var recipeBtn=$("<a>").addClass("btn btn-primary").attr("href", arr[i].url).attr("id", "recipe-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var favoriteBtn=$("<a>").addClass("btn btn-primary").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                
+                innerdiv.append(title, yield, time, calories, ingredients, dietLabels, healthLabels, recipeBtn, favoriteBtn);
+                div.append(img).append(innerdiv);
+                
+                $("#result").append(div);
+            };
+        });
+   });
+});
+    
+</script>
+<style>
+.form {
+    width:600px;
+    margin:0 auto;
+    background-color:rgba(240, 248, 255, 0.4);
+}
+ul { 
+    list-style-type: none; 
+}
+label.title { 
+    font-weight: bold; 
+    width: 80px; 
+    float: left; 
+}
+div.centered {  
+    text-align: center; 
+}
+fieldset {
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border-width: 2px;
+    border-style: groove;
+    border-color: threedface;
+    border-image: initial;
+    margin: 15px 10px; 
+}
+fieldset legend { 
+    font-weight: bold; 
+    font-size: 18px; 
+    color: purple; 
+    width:120px;
+    text-align: center; 
+}
+ul li { 
+    margin-bottom: 10px; 
+}
+h3 {
+    background-color: #0026ff7a;
+    color: #fff;
+    padding: 10px;
+    margin: 0;
+    /* border-top: 1px solid rgb(250, 16, 16); */
+}
+</style>
