@@ -92,4 +92,10 @@ router.get("/api/user_data", function(req, res) {
     }
 });
 
+router.get("/api/meals", function(req, res) {
+
+    db.Meal.
+
+});
+
 module.exports = router;
