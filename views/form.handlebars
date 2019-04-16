@@ -52,6 +52,7 @@ $(function(){
     var newObject={};
     $("#accordion").accordion();
     $("#submit").on("click", function(e){
+        $("#result").empty();
         $("#click").click();
         e.preventDefault;
         $.ajax({
@@ -154,5 +155,9 @@ h3 {
     padding: 10px;
     margin: 0;
     /* border-top: 1px solid rgb(250, 16, 16); */
+}
+.card {
+   float: left;
+   margin: 10px;
 }
 </style>
