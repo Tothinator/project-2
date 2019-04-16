@@ -42,32 +42,9 @@
         </div>
     </div>
     <h3 id="click">Result</h3>
-    <div id="result">
-        {{!-- <div>
-            {{#each result}}
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{calories}}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            {{/each}}
-        </div> --}}
-    </div>
+    <div id="result"></div>
 </div>
-{{!-- 0:
-calories: 2643.1901685250004
-dietLabels: ["Low-Carb"]
-healthLabels: (3) ["Peanut-Free", "Tree-Nut-Free", "Alcohol-Free"]
-image: "https://www.edamam.com/web-img/d4b/d4bb1e6c7a6c3738d8e01707eb0ad83d.jpg"
-ingredientLines: (6) ["1 chicken, about 3.5 to 4 pounds", "1 lemon", "1 blood orange", "1 tangerine or clementine", "Kosher salt", "1/2 cup chicken broth"]
-label: "Citrus Roasted Chicken"
-totalTime: 424
-url: "https://food52.com/recipes/3403-citrus-roasted-chicken"
-yield: 4
-__proto__: Object --}}
+
 <script>
 $(function(){
     var arr = [];
@@ -84,6 +61,8 @@ $(function(){
             console.log(data);
           
             for (var i = 0; i < data.hits.length; i ++){
+                var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
+                console.log(caloriesPer);
                 object = {
                     "image": data.hits[i].recipe.image,
                     "label": data.hits[i].recipe.label,
@@ -92,7 +71,7 @@ $(function(){
                     "dietLabels": data.hits[i].recipe.dietLabels,
                     "healthLabels": data.hits[i].recipe.healthLabels,
                     "ingredientLines": data.hits[i].recipe.ingredientLines,
-                    "calories": Math.round(data.hits[i].recipe.calories),
+                    "calories": Math.round(caloriesPer),
                     "totalTime": data.hits[i].recipe.totalTime
                 };
                 arr.push(object);
@@ -109,12 +88,12 @@ $(function(){
                     
                 var yield=$("<p>").addClass("card-text").text("Servings: " + arr[i].yield);
                 var time=$("<p>").addClass("card-text").text("Cooking Time: " + arr[i].totalTime);
-                var calories=$("<p>").addClass("card-text").text("Total Calories: " + arr[i].calories);
+                var calories=$("<p>").addClass("card-text").text("Calories: " + arr[i].calories);
                 var ingredients=$("<p>").addClass("card-text").text("Ingredients: " + arr[i].ingredientLines);
                 var dietLabels=$("<p>").addClass("card-text").text("Special Diets: " + arr[i].dietLabels);
                 var healthLabels=$("<p>").addClass("card-text").text("Other Health Notes: " + arr[i].healthLabels);
                 
-                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe").attr("href", arr[i].url).attr("id", "recipe-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe").attr("href", "https://outline.com/" + arr[i].url).attr("id", "recipe-btn").attr("target", "_blank").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
                 var favoriteBtn=$("<a>").addClass("btn btn-primary").text("Favorite").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
                 
                 innerdiv.append(title, yield, time, calories, ingredients, dietLabels, healthLabels, recipeBtn, favoriteBtn);
@@ -122,32 +101,8 @@ $(function(){
                 
                 $("#result").append(div);
             }
-            
-       //     newObject={
-       ////         abc:arr
-               // abc:1234
-       //     }
-      //      //$.ajax("/api/meals",{
-           //     method:"POST",
-          //      data:
-           // }).then(function(data){
-                
-           // });
-       //    $.post("/api/meals",newObject).then(function(data){
-       //        console.log(data);
-          // })
         });
    });
-    //$.ajax({
-//type: 'GET',
-//url: "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?excludeIngredients=coconut&intolerances=egg%2C+gluten&number=10&offset=0&type=main+course&query=burger",
-// headers: {
-//     "X-RapidAPI-Host":"spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
-//    "X-RapidAPI-Key":"7aac7f7ddcmsh1b8ceb5b1d42d3dp1e06fdjsnef3530774afd"
-// }
-//  }).done(function(data) { 
-// console.log(data); 
-// })
 });
     
 </script>
