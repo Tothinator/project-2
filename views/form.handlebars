@@ -92,7 +92,7 @@ $(function(){
                     "dietLabels": data.hits[i].recipe.dietLabels,
                     "healthLabels": data.hits[i].recipe.healthLabels,
                     "ingredientLines": data.hits[i].recipe.ingredientLines,
-                    "calories": data.hits[i].recipe.calories,
+                    "calories": Math.round(data.hits[i].recipe.calories),
                     "totalTime": data.hits[i].recipe.totalTime
                 };
                 arr.push(object);
@@ -105,17 +105,17 @@ $(function(){
                 
                 var innerdiv=$("<div>").addClass("card-body");
                 
-                var title=$("<h5>").addClass("card-title").attr(arr[i].label);
+                var title=$("<h5>").addClass("card-title").text(arr[i].label);
                     
-                var yield=$("<p>").addClass("card-text").attr(arr[i].yield);
-                var time=$("<p>").addClass("card-text").attr(arr[i].totalTime);
-                var calories=$("<p>").addClass("card-text").attr(arr[i].calories);
-                var ingredients=$("<p>").addClass("card-text").attr(arr[i].ingredientLines);
-                var dietLabels=$("<p>").addClass("card-text").attr(arr[i].dietLabels);
-                var healthLabels=$("<p>").addClass("card-text").attr(arr[i].healthLabels);
+                var yield=$("<p>").addClass("card-text").text("Servings: " + arr[i].yield);
+                var time=$("<p>").addClass("card-text").text("Cooking Time: " + arr[i].totalTime);
+                var calories=$("<p>").addClass("card-text").text("Total Calories: " + arr[i].calories);
+                var ingredients=$("<p>").addClass("card-text").text("Ingredients: " + arr[i].ingredientLines);
+                var dietLabels=$("<p>").addClass("card-text").text("Special Diets: " + arr[i].dietLabels);
+                var healthLabels=$("<p>").addClass("card-text").text("Other Health Notes: " + arr[i].healthLabels);
                 
-                var recipeBtn=$("<a>").addClass("btn btn-primary").attr("href", arr[i].url).attr("id", "recipe-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
-                var favoriteBtn=$("<a>").addClass("btn btn-primary").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe").attr("href", arr[i].url).attr("id", "recipe-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var favoriteBtn=$("<a>").addClass("btn btn-primary").text("Favorite").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
                 
                 innerdiv.append(title, yield, time, calories, ingredients, dietLabels, healthLabels, recipeBtn, favoriteBtn);
                 div.append(img).append(innerdiv);
