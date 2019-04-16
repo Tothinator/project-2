@@ -10,26 +10,32 @@ var router = express.Router();
 
 //HTML ROUTES======================================================================================================
 router.get("/", function(req, res) {
+    //Checking if session exists for current user.
+    console.log(req.user);
+    if (req.user) {
+        return res.redirect("/members");
+    }
+
     res.render("index", {
         msg: "Welcome!"
     });
 });
 
 // Load example page and pass in an example by id
-router.get("/login", function(req, res) {
-    //Session exists for the user
-    console.log(req.user);
-    if (req.user) {
-        return res.redirect("/members");
-    }
+// router.get("/login", function(req, res) {
+//     //Session exists for the user
+//     console.log(req.user);
+//     if (req.user) {
+//         return res.redirect("/members");
+//     }
 
-    //Else render the login.handlbars
-    res.render("login");
+//     //Else render the login.handlbars
+//     res.render("index");
 
-});
+// });
 
 router.get("/members", isAuthenticated, function(req, res) {
-
+    console.log("reaching member page");
     res.render("members");
 
 });
@@ -42,10 +48,12 @@ router.get("*", function(req, res) {
 
 
 //API ROUTES======================================================================================================
-router.post("/api/login", passport.authenticate("local"), function(req, res) {
+//logging in route
+router.post("/api/login/", passport.authenticate("local"), function(req, res) {
+    console.log("going to members");
     res.json("/members");
 });
-
+//signing up account route
 router.post("/api/signup", function(req, res) {
     console.log(req.body.username);
     console.log(req.body.password);
@@ -53,9 +61,10 @@ router.post("/api/signup", function(req, res) {
         username: req.body.username,
         password: req.body.password
     }).then(function() {
+      
         res.redirect(307, "/api/login");
     }).catch(function(err) {
-        console.log(err);
+        console.log("Getting error");
         res.json(err);
         // res.status(422).json(err.errors[0].message);
     });
