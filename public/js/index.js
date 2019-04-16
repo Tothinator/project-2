@@ -31,11 +31,16 @@ $loginSubmit.on("click", function(event) {
             .trim()
     };
 
-    $.ajax("/api/login", {
+    $.ajax("/api/login/", {
         method: "POST",
         data: login
-    }).then(function() {
-        location.reload();
+    }).then(function(res) {
+        console.log(res);
+        console.log("Redirecting to main page");
+        window.location.replace("/members");
+    }).catch(function(err){
+        alert("Sorry, username or password is incorrect.");
+        console.log(err);
     });
 });
 
@@ -52,6 +57,7 @@ $signupSubmit.on("click", function(event) {
     if (pass1 !== pass2) {
         $("#passwordMatch").text("Your passwords don't match!");
     } else {
+        console.log($("#passwordLogin").val());
         var signup = {
             username: $("#usernameSignup")
                 .val()
@@ -64,8 +70,14 @@ $signupSubmit.on("click", function(event) {
         $.ajax("/api/signup", {
             method: "POST",
             data: signup
-        }).then(function() {
-            location.reload();
+        }).then(function(res) {
+            console.log(res);
+            if(res.errors){
+                return alert("Usersname has already been taken.");
+            }
+         
+            console.log("Redirecting to main page");
+            window.location.replace("/members");
         });
     }
 });
