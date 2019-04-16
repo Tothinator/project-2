@@ -41,10 +41,10 @@ router.get("/members", isAuthenticated, function(req, res) {
 });
 
 
-// Render 404 page for any unmatched routes
-router.get("*", function(req, res) {
-    res.render("404");
-});
+// // Render 404 page for any unmatched routes
+// router.get("*", function(req, res) {
+//     res.render("404");
+// });
 
 
 //API ROUTES======================================================================================================
@@ -94,8 +94,20 @@ router.get("/api/user_data", function(req, res) {
 
 router.get("/api/meals", function(req, res) {
 
-    db.Meal.
+    // db.Meal.findOrCreate({
+    //     where: {
+    //         name:
+    //     }
+    // })
 
+});
+
+router.get("/form", function(req, res) {
+    if(!req.user) {
+        return res.redirect("/");
+    } else {
+        res.render("form", {user: req.user.username});
+    }
 });
 
 module.exports = router;
