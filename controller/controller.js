@@ -99,11 +99,9 @@ router.post("/api/meals", function(req, res) {
 });
 
 router.get("/form", function(req, res) {
-    // if(!req.user) {
-    // return res.redirect("/");
-    // } else {
-    res.render("form" /*, {user: req.user.username} */);
-    // }
+
+    res.render("form");
+
 });
 
 // // Render 404 page for any unmatched routes

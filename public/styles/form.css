@@ -1,0 +1,55 @@
+.form {
+    width:600px;
+    margin:0 auto;
+    background-color:rgba(240, 248, 255, 0.4);
+}
+ul { 
+    list-style-type: none; 
+}
+label.title { 
+    font-weight: bold; 
+    width: 80px; 
+    float: left; 
+}
+div.centered {  
+    text-align: center; 
+}
+fieldset {
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border-width: 2px;
+    border-style: groove;
+    border-color: threedface;
+    border-image: initial;
+    margin: 15px 10px; 
+}
+fieldset legend { 
+    font-weight: bold; 
+    font-size: 18px; 
+    color: #375a7f; 
+    width:120px;
+    text-align: center; 
+}
+ul li { 
+    margin-bottom: 10px; 
+}
+h3 {
+    padding: 10px;
+    margin: 0;
+}
+.btn-primary {
+    margin: 5px;
+}
+.card {
+   float: left;
+   margin: 10px;
+}
+.bold {
+    font-weight: bold;
+}
