@@ -25,46 +25,74 @@
                     </label>
                 </li>
                 <li>
-                    <label for="health">Health : <br>
-                        <input type="checkbox" id="vegan">vegan
-                        <input type="checkbox" id="vegetarian">vegetarian
-                        <input type="checkbox" id="sugar-conscious">sugar-conscious<br>
-                        <input type="checkbox" id="peanut-free">peanut-free
-                        <input type="checkbox" id="tree-nut-free">tree-nut-free
-                        <input type="checkbox" id="alcohol-free">alcohol-free
+                    <label id="health">Health : <br>
+                        <input type="checkbox" id="vegan" name="health" value="vegan"><label for="vegan">vegan</label>
+                        <input type="checkbox" id="vegetarian" name="health" value="vegetarian"><label for="vegetarian">vegetarian</label>
+                        <input type="checkbox" id="sugar-conscious" name="health" value="sugar-conscious"><label for="sugar-conscious">sugar-conscious</label><br>
+                        <input type="checkbox" id="peanut-free" name="health" value="peanut-free"><label for="peanut-free">peanut-free</label>
+                        <input type="checkbox" id="tree-nut-free" name="health" value="tree-nut-free"><label for="tree-nut-free">tree-nut-free</label>
+                        <input type="checkbox" id="alcohol-free" name="health" value="alcohol-free"><label for="alcohol-free">alcohol-free</label>
                     </label>
                 </li>
             </ul>
         </fieldset>
         <div class="centered">
             <input type="submit" id ="submit" value="Let's cook">
-            <input type="reset" value="reset">
         </div>
     </div>
     <h3 id="click">Result</h3>
     <div id="result"></div>
+    <h3 id="recipe">Recipe</h3>
+    <div>
+       <p>
+            <iframe width="100%" height="600" src="" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+       </p>
+    </div>
 </div>
 
 <script>
 $(function(){
-    var arr = [];
-    var object={};
-    var newObject={};
+    
     $("#accordion").accordion();
     $("#submit").on("click", function(e){
+        
+        e.preventDefault;
+
+        if($("#food").val()==="") {
+            return $("#food").focus();
+        }
+
+        var diet="";
+        var health="";
+        var arr = [];
         $("#result").empty();
         $("#click").click();
-        e.preventDefault;
+        
+        if($("[name='health']:checked").length!=0) {
+            $.each($("[name='health']:checked"), function(i, element) {
+                health=health+"&health="+element.value;
+            });
+        }
+        
+        if($("#diet").val()!="") {
+            diet="&diet=";
+            diet=diet+$(":selected").val();
+        }
+ 
+        var url = "https://api.edamam.com/search?app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=8&q="+$("#food").val()+health+diet;
         $.ajax({
-            url:"https://api.edamam.com/search?q=chicken&app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=3&calories=591-722&health=alcohol-free",
+            url:url,
             method: "GET"
         }).then(function(data) {
             console.log(data);
           
             for (var i = 0; i < data.hits.length; i ++){
                 var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
-                console.log(caloriesPer);
-                object = {
+                
+                var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);          
+                var minutes = parseInt(data.hits[i].recipe.totalTime) % 60;
+                
+                var object = {
                     "image": data.hits[i].recipe.image,
                     "label": data.hits[i].recipe.label,
                     "url": data.hits[i].recipe.url,
@@ -73,36 +101,60 @@ $(function(){
                     "healthLabels": data.hits[i].recipe.healthLabels,
                     "ingredientLines": data.hits[i].recipe.ingredientLines,
                     "calories": Math.round(caloriesPer),
-                    "totalTime": data.hits[i].recipe.totalTime
+                    "totalTime": hours + " hours and " + minutes + " minutes"
                 };
                 arr.push(object);
             }
 
             for (var i=0;i<arr.length;i++)  {
-                var div=$("<div>").addClass("card").attr("style","width:18rem");
+                var div=$("<div>").addClass("card").attr("style","width:18rem");     
+                var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);             
+                var innerdiv=$("<div>").addClass("card-body");              
+                var title=$("<h5>").addClass("card-title").text(arr[i].label);                 
+                var yield=$("<p>").addClass("card-text").html("<span class='bold'>Servings:</span> " + arr[i].yield);
+                var time=$("<p>").addClass("card-text").html("<span class='bold'>Cooking Time:</span> " + arr[i].totalTime);
+                var calories=$("<p>").addClass("card-text").html("<span class='bold'>Calories:</span> " + arr[i].calories);
                 
-                var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);
+                var iLabel=$("<p>").text("Ingredients: ").addClass("bold");
+                var ingredients = $("<div>").addClass("card-text");
+                for (var j = 0; j < arr[i].ingredientLines.length; j ++){
+                    var ingredient = $("<p>").text(arr[i].ingredientLines[j] + "\n");
+                    ingredients.append(ingredient);
+                };     
                 
-                var innerdiv=$("<div>").addClass("card-body");
+                var dLabel=$("<p>").text("Diets: ").addClass("bold");
+                var diets=$("<div>").addClass("card-text");
+                for (var k = 0; k < arr[i].dietLabels.length; k ++){
+                    var diet = $("<p>").text(arr[i].dietLabels[k] + "\n");
+                    diets.append(diet);
+                };
                 
-                var title=$("<h5>").addClass("card-title").text(arr[i].label);
-                    
-                var yield=$("<p>").addClass("card-text").text("Servings: " + arr[i].yield);
-                var time=$("<p>").addClass("card-text").text("Cooking Time: " + arr[i].totalTime);
-                var calories=$("<p>").addClass("card-text").text("Calories: " + arr[i].calories);
-                var ingredients=$("<p>").addClass("card-text").text("Ingredients: " + arr[i].ingredientLines);
-                var dietLabels=$("<p>").addClass("card-text").text("Special Diets: " + arr[i].dietLabels);
-                var healthLabels=$("<p>").addClass("card-text").text("Other Health Notes: " + arr[i].healthLabels);
+                var hLabel=$("<p>").text("Other Health Notes: ").addClass("bold");
+                var healths=$("<div>").addClass("card-text");
+                for (var l = 0; l < arr[i].healthLabels.length; l ++){
+                    var health = $("<p>").text(arr[i].healthLabels[l] + "\n");
+                    healths.append(health);
+                };
                 
-                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe").attr("href", "https://outline.com/" + arr[i].url).attr("id", "recipe-btn").attr("target", "_blank").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var recipeBtn=$("<a>").addClass("btn btn-primary recipe").text("Recipe").attr("id", "recipe-btn").attr("target", "_blank").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
                 var favoriteBtn=$("<a>").addClass("btn btn-primary").text("Favorite").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
                 
-                innerdiv.append(title, yield, time, calories, ingredients, dietLabels, healthLabels, recipeBtn, favoriteBtn);
+                innerdiv.append(title, yield, time, calories, iLabel, ingredients, dLabel, diets, hLabel, healths, recipeBtn, favoriteBtn);
                 div.append(img).append(innerdiv);
                 
                 $("#result").append(div);
             }
         });
+   });
+   $(document).on('keypress',function(e) {
+        if(e.which == 13) {
+           $("#submit").click();
+        }
+    });
+
+   $(document).on("click", ".recipe", function(){
+       $("#recipe").click();
+       $("iframe").attr("src",$(this).data("url"));
    });
 });
     
@@ -154,10 +206,15 @@ h3 {
     color: #fff;
     padding: 10px;
     margin: 0;
-    /* border-top: 1px solid rgb(250, 16, 16); */
+}
+.btn-primary {
+    margin: 5px;
 }
 .card {
    float: left;
    margin: 10px;
+}
+.bold {
+    font-weight: bold;
 }
 </style>
