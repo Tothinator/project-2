@@ -183,7 +183,8 @@ $(function(){
             method: "POST",
             data: {
                 url: $(this).data("url"),
-                data: mealData
+                data: mealData,
+                table: "favorite"
             }
         }).then( function(results){
             console.log(results);

@@ -77,7 +77,7 @@ router.get("/members/favorites", function(req, res) {
             var recipeList = results[0].Meals;
             console.log(recipeList);
             console.log(results[0].Meals[0].name);
-            console.log(results[0].Meals[1].name);
+            // console.log(results[0].Meals[1].name);
             var recipes = [];
             for (var i = 0; i < recipeList.length; i++){
 
@@ -123,31 +123,49 @@ router.get("/", function(req, res) {
     });
 });
 
-
-
-// Render 404 page for any unmatched routes
-router.get("*", function(req, res) {
-    res.render("404");
-});
-
-
-
-
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
     
     var data = req.body.data;
 
     // console.log(req.body);
-    console.log(req.body.url);
-    console.log(data);
+    // console.log(req.body.url);
+    // console.log(data);
 
 
     db.Meal.findOrCreate({
         where: {
             recipeURL: req.body.url
         },
-        
+        defaults: data
+    }).then(([meal, created]) => {
+
+        var id = meal.get({ plain: true }).id;
+
+        console.log(meal.get({
+            plain: true
+        }))
+        console.log(created)
+
+        if (req.body.table === "favorite") {
+            // add meal to favorites for current user
+
+            db.Favorite.create({
+                UserId: req.user.id,
+                MealId: id
+            }).then( function (results) {
+                res.send("Added meal " + meal.get({ plain: true }).name + 
+                " to user's favorites");
+            })
+
+        } else if (req.body.table === "day") {
+            // add meal to calendar day for current user
+            res.send("Added meal " + meal.get({ plain: true }).name + 
+            " to user's specified date");
+        } else {
+            res.send("Error occured");
+        }
+
     });
 
 });
