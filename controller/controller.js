@@ -88,13 +88,20 @@ router.get("/api/user_data", function(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
+    
+    var data = req.body.data;
 
-    console.log(req.body);
-    // db.Meal.findOrCreate({
-    //     where: {
-    //         name:
-    //     }
-    // })
+    // console.log(req.body);
+    console.log(req.body.url);
+    console.log(data);
+
+
+    db.Meal.findOrCreate({
+        where: {
+            recipeURL: req.body.url
+        },
+        
+    });
 
 });
 

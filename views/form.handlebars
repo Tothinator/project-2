@@ -168,12 +168,9 @@ $(function(){
 
     $("#result").on("click", ".btn-favorite", function() {
 
-        var mealName = {
-            name: $(this).data("title")
-        }
         var mealData = {
+            name: $(this).data("title"),
             image: $(this).data("image"),
-            recipeURL: $(this).data("url"),
             servings: $(this).data("yield"),
             dietLabels: JSON.stringify($(this).data("dietLabels")),
             healthLabels: JSON.stringify($(this).data("healthLabels")),
@@ -182,14 +179,12 @@ $(function(){
             time: $(this).data("totalTime"),
         }
 
-        var newMeal = {
-            name: mealName,
-            data: mealData
-        }
-
         $.ajax("/api/meals", {
             method: "POST",
-            data: newMeal
+            data: {
+                url: $(this).data("url"),
+                data: mealData
+            }
         }).then( function(results){
             console.log(results);
         })
