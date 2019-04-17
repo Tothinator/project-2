@@ -4,52 +4,6 @@ var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 
 var router = express.Router();
-<<<<<<< HEAD
-=======
-
-
-
-
-//HTML ROUTES======================================================================================================
-router.get("/", function(req, res) {
-    //Checking if session exists for current user.
-    console.log(req.user);
-    if (req.user) {
-        return res.redirect("/members");
-    }
-
-    res.render("index", {
-        msg: "Welcome!"
-    });
-});
-
-// Load example page and pass in an example by id
-// router.get("/login", function(req, res) {
-//     //Session exists for the user
-//     console.log(req.user);
-//     if (req.user) {
-//         return res.redirect("/members");
-//     }
-
-//     //Else render the login.handlbars
-//     res.render("index");
-
-// });
-
-router.get("/members", isAuthenticated, function(req, res) {
-    console.log("reaching member page");
-    res.render("members", {user: req.user.username});
-
-});
-
-
-// // Render 404 page for any unmatched routes
-// router.get("*", function(req, res) {
-//     res.render("404");
-// });
-
-
->>>>>>> a77562a73200e2bfe73bdbe16423059c19eb8695
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
@@ -97,7 +51,6 @@ router.get("/api/user_data", function(req, res) {
     }
 });
 
-<<<<<<< HEAD
 
 
 //HTML ROUTES======================================================================================================
@@ -108,19 +61,45 @@ router.get("/members/favorites", function(req, res) {
     if (!req.user) {
         return res.redirect("/");
     }
-    console.log(req.user);
-    console.log(req.user.username);
-    db.User.getMeals({
-        where: { username: req.user.username}
+    // console.log(req.user.username);
+    db.User.findAll({
+        where: {id: req.user.id},
+        include: [{
+            model: db.Meal,
+            attributes: ["name", "image", "recipeURL"],
+            through: {
+                model: db.Favorite
+            }
+        }]
     })
         .then(function(results){
             //Pull data from database
-            console.log(results);
+            var recipeList = results[0].Meals;
+            console.log(recipeList);
+            console.log(results[0].Meals[0].name);
+            console.log(results[0].Meals[1].name);
+            var recipes = [];
+            for (var i = 0; i < recipeList.length; i++){
+
+                var recipe = {
+                    recipeName: recipeList[i].name,
+                    imageLink: recipeList[i].image,
+                    recipeLink: recipeList[i].recipeURL
+                };
+
+                recipes.push(recipe);
+            }
+            console.log(recipes);
+            
+
+
             res.render("favorites", {
-                user: req.user.username
+                user: req.user.username,
+                recipes: recipes
             });
 
         });
+
 
 
 });
@@ -154,7 +133,6 @@ router.get("*", function(req, res) {
 
 
 
-=======
 router.get("/form", function(req, res) {
     if(!req.user) {
         return res.redirect("/");
@@ -163,5 +141,4 @@ router.get("/form", function(req, res) {
     }
 });
 
->>>>>>> a77562a73200e2bfe73bdbe16423059c19eb8695
 module.exports = router;

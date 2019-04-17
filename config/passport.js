@@ -12,7 +12,7 @@ passport.use(new LocalStrategy(
     },
     function(username, password, done) {
     // When a user tries to sign in this code runs
-        console.log("accesing database");
+        console.log("accesing database to check if signed up");
         db.User.findOne({
             where: {
                 username: username
