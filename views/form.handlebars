@@ -1,5 +1,14 @@
+{{!-- <ul>
+	  {{#each cats}}
+	    {{#unless sleepy}} /* if sleepy==false */
+	      {{> cats/cat-block sleep=true}} 
+	/* partials/cats/cat-blcok.handlebars를 호출한다. 이때 추가 패러미터로 sleep=true를 전달한다 (name은 자동으로 전달된다.) */
+	    {{/unless}}
+	  {{/each}}
+</ul> --}}
+
 <div id="accordion">
-    <h3>Find Your Recipe</h3>
+    <h3 id="init">Find your Recipe</h3>
     <div>
         <fieldset>
             <legend>Cuisine</legend>
@@ -37,25 +46,31 @@
             </ul>
         </fieldset>
         <div class="centered">
-            <input class="btn btn-primary" type="submit" id ="submit" value="Let's cook">
+            <input type="submit" id ="submit" value="Let's cook">
         </div>
     </div>
-    <h3 class="bg-dark" id="click">Result</h3>
+    <h3 id="click">Result</h3>
     <div id="result"></div>
-    <h3 class="bg-dark" id="recipe">Recipe</h3>
+    <h3 id="recipe">Recipe</h3>
     <div>
        <p>
             <iframe width="100%" height="600" src="" marginwidth="0" marginheight="0" frameborder="0"></iframe>
        </p>
     </div>
 </div>
-
 <script>
 $(function(){
-    
-    // $("#accordion").accordion();
+    $("#accordion").accordion();
+    $("#init").click();
+
+    $(document).on('keypress',function(e) {
+        if(e.which == 13) {
+           $("#submit").click();
+        }
+    });
+
     $("#submit").on("click", function(e){
-        
+
         e.preventDefault;
 
         if($("#food").val()==="") {
@@ -64,49 +79,34 @@ $(function(){
 
         var diet="";
         var health="";
-        var arr = [];
+        //var arr = [];
         $("#result").empty();
-        $("#click").click();
-        
+       
         if($("[name='health']:checked").length!=0) {
             $.each($("[name='health']:checked"), function(i, element) {
                 health=health+"&health="+element.value;
             });
         }
-        
+
         if($("#diet").val()!="") {
             diet="&diet=";
             diet=diet+$(":selected").val();
         }
- 
-        var url = "https://api.edamam.com/search?app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=8&q="+$("#food").val()+health+diet;
-        $.ajax({
-            url:url,
-            method: "GET"
-        }).then(function(data) {
-            console.log(data);
-          
-            for (var i = 0; i < data.hits.length; i ++){
-                var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
-                
-                var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);          
-                var minutes = parseInt(data.hits[i].recipe.totalTime) % 60;
-                
-                var object = {
-                    "image": data.hits[i].recipe.image,
-                    "label": data.hits[i].recipe.label,
-                    "url": data.hits[i].recipe.url,
-                    "yield": data.hits[i].recipe.yield,
-                    "dietLabels": data.hits[i].recipe.dietLabels,
-                    "healthLabels": data.hits[i].recipe.healthLabels,
-                    "ingredientLines": data.hits[i].recipe.ingredientLines,
-                    "calories": Math.round(caloriesPer),
-                    "totalTime": hours + " hours and " + minutes + " minutes"
-                };
-                arr.push(object);
-            }
 
-            for (var i=0;i<arr.length;i++)  {
+        var url = "https://api.edamam.com/search?app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=8&q="+$("#food").val()+health+diet;
+        
+        var object={
+            "sendingURL":url
+        }
+
+        $.ajax("/api/recipe/", {
+            type:"POST",
+            data: object
+        }).then(function(arr) {
+           $("#click").click();
+           console.log(arr);
+
+           for (var i=0;i<arr.length;i++)  {
                 var div=$("<div>").addClass("card").attr("style","width:18rem");     
                 var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);             
                 var innerdiv=$("<div>").addClass("card-body");              
@@ -138,72 +138,39 @@ $(function(){
                 
                 var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe")
                     .attr("href", arr[i].url).attr("id", "recipe-btn")
-                    .attr("data-title", data.hits[i].recipe.label)
-                    .attr("data-image", data.hits[i].recipe.image)
-                    .attr("data-url", data.hits[i].recipe.url)
-                    .attr("data-yield", data.hits[i].recipe.yield)
-                    .attr("data-dietLabels", data.hits[i].recipe.dietLabels)
-                    .attr("data-healthLabels", data.hits[i].recipe.healthLabels)
-                    .attr("data-ingredientLines", data.hits[i].recipe.ingredientLines)
-                    .attr("data-calories", data.hits[i].recipe.calories)
-                    .attr("data-totalTime", data.hits[i].recipe.totalTime);
+                    .attr("data-title", arr[i].label)
+                    .attr("data-image", arr[i].image)
+                    .attr("data-url", arr[i].url)
+                    .attr("data-yield", arr[i].yield)
+                    .attr("data-dietLabels", arr[i].dietLabels)
+                    .attr("data-healthLabels", arr[i].healthLabels)
+                    .attr("data-ingredientLines", arr[i].ingredientLines)
+                    .attr("data-calories", arr[i].calories)
+                    .attr("data-totalTime", arr[i].totalTime);
                 var favoriteBtn=$("<a>").addClass("btn btn-primary btn-favorite").text("Favorite")
-                    .data("title", data.hits[i].recipe.label)
-                    .data("image", data.hits[i].recipe.image)
-                    .data("url", data.hits[i].recipe.url)
-                    .data("yield", data.hits[i].recipe.yield)
-                    .data("dietLabels", data.hits[i].recipe.dietLabels.toString())
-                    .data("healthLabels", data.hits[i].recipe.healthLabels)
-                    .data("ingredientLines", data.hits[i].recipe.ingredientLines)
-                    .data("calories", data.hits[i].recipe.calories)
-                    .data("totalTime", data.hits[i].recipe.totalTime);
+                    .data("title", arr[i].label)
+                    .data("image", arr[i].image)
+                    .data("url", arr[i].url)
+                    .data("yield", arr[i].yield)
+                    .data("dietLabels", arr[i].dietLabels.toString())
+                    .data("healthLabels", arr[i].healthLabels)
+                    .data("ingredientLines", arr[i].ingredientLines)
+                    .data("calories", arr[i].calories)
+                    .data("totalTime",arr[i].totalTime);
+                
                 
                 innerdiv.append(title, yield, time, calories, iLabel, ingredients, dLabel, diets, hLabel, healths, recipeBtn, favoriteBtn);
                 div.append(img).append(innerdiv);
                 
                 $("#result").append(div);
-            }
+            };
+
         });
-   });
-
-    $("#result").on("click", ".btn-favorite", function() {
-
-        var mealName = {
-            name: $(this).data("title")
-        }
-        var mealData = {
-            image: $(this).data("image"),
-            recipeURL: $(this).data("url"),
-            servings: $(this).data("yield"),
-            dietLabels: JSON.stringify($(this).data("dietLabels")),
-            healthLabels: JSON.stringify($(this).data("healthLabels")),
-            ingredients: JSON.stringify($(this).data("ingredientLines")),
-            calories: $(this).data("calories"),
-            time: $(this).data("totalTime"),
-        }
-
-        var newMeal = {
-            name: mealName,
-            data: mealData
-        }
-
-        $.ajax("/api/meals", {
-            method: "POST",
-            data: newMeal
-        }).then( function(results){
-            console.log(results);
-        })
     });
-   $(document).on('keypress',function(e) {
-        if(e.which == 13) {
-           $("#submit").click();
-        }
-    });
-
-   $(document).on("click", ".recipe", function(){
+    $(document).on("click", ".recipe", function(){
        $("#recipe").click();
        $("iframe").attr("src",$(this).data("url"));
    });
 });
-    
+
 </script>
