@@ -78,7 +78,7 @@ $(function(){
         $("#click").click();
         e.preventDefault;
         $.ajax({
-            url:"https://api.edamam.com/search?q=chicken&app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=3&calories=591-722&health=alcohol-free",
+            url:"https://cors-ut-bootcamp.herokuapp.com/https://api.edamam.com/search?q=chicken&app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=3&calories=591-722&health=alcohol-free",
             method: "GET"
         }).then(function(data) {
             console.log(data);
@@ -114,9 +114,30 @@ $(function(){
                 var dietLabels=$("<p>").addClass("card-text").text("Special Diets: " + arr[i].dietLabels);
                 var healthLabels=$("<p>").addClass("card-text").text("Other Health Notes: " + arr[i].healthLabels);
                 
-                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe").attr("href", arr[i].url).attr("id", "recipe-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
-                var favoriteBtn=$("<a>").addClass("btn btn-primary").text("Favorite").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe")
+                    .attr("href", arr[i].url).attr("id", "recipe-btn")
+                    .attr("data-title", data.hits[i].recipe.label)
+                    .attr("data-image", data.hits[i].recipe.image)
+                    .attr("data-url", data.hits[i].recipe.url)
+                    .attr("data-yield", data.hits[i].recipe.yield)
+                    .attr("data-dietLabels", data.hits[i].recipe.dietLabels)
+                    .attr("data-healthLabels", data.hits[i].recipe.healthLabels)
+                    .attr("data-ingredientLines", data.hits[i].recipe.ingredientLines)
+                    .attr("data-calories", data.hits[i].recipe.calories)
+                    .attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var favoriteBtn=$("<a>").addClass("btn btn-primary btn-favorite").text("Favorite")
+                    .attr("data-title", data.hits[i].recipe.label)
+                    .attr("data-image", data.hits[i].recipe.image)
+                    .attr("data-url", data.hits[i].recipe.url)
+                    .attr("data-yield", data.hits[i].recipe.yield)
+                    .attr("data-dietLabels", data.hits[i].recipe.dietLabels.toString())
+                    .attr("data-healthLabels", data.hits[i].recipe.healthLabels)
+                    .attr("data-ingredientLines", data.hits[i].recipe.ingredientLines)
+                    .attr("data-calories", data.hits[i].recipe.calories)
+                    .attr("data-totalTime", data.hits[i].recipe.totalTime);
                 
+                console.log(favoriteBtn);
+
                 innerdiv.append(title, yield, time, calories, ingredients, dietLabels, healthLabels, recipeBtn, favoriteBtn);
                 div.append(img).append(innerdiv);
                 
@@ -138,16 +159,49 @@ $(function(){
           // })
         });
    });
-    //$.ajax({
-//type: 'GET',
-//url: "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?excludeIngredients=coconut&intolerances=egg%2C+gluten&number=10&offset=0&type=main+course&query=burger",
-// headers: {
-//     "X-RapidAPI-Host":"spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
-//    "X-RapidAPI-Key":"7aac7f7ddcmsh1b8ceb5b1d42d3dp1e06fdjsnef3530774afd"
-// }
-//  }).done(function(data) { 
-// console.log(data); 
-// })
+                //$.ajax({
+                    //type: 'GET',
+                    //url: "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?excludeIngredients=coconut&intolerances=egg%2C+gluten&number=10&offset=0&type=main+course&query=burger",
+                    // headers: {
+                    //     "X-RapidAPI-Host":"spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+                    //    "X-RapidAPI-Key":"7aac7f7ddcmsh1b8ceb5b1d42d3dp1e06fdjsnef3530774afd"
+                    // }
+                    //  }).done(function(data) { 
+                    // console.log(data); 
+                // })
+
+    $("#result").on("click", ".btn-favorite", function() {
+
+        console.log($(this).data("dietLabels"));
+
+        var mealName = {
+            name: $(this).data("title")
+        }
+        var mealData = {
+            image: $(this).data("image"),
+            recipeURL: $(this).data("url"),
+            servings: $(this).data("yield"),
+            dietLabels: $(this).data("dietLabels"),
+            healthLabels: $(this).data("healthLabels"),
+            ingredients: $(this).data("ingredientLines"),
+            calories: $(this).data("calories"),
+            time: $(this).data("totalTime"),
+        }
+
+        console.log(mealData);
+    
+        var newMeal = {
+            name: mealName,
+            data: mealData
+        }
+
+        $.ajax("/api/meals", {
+            method: "POST",
+            data: newMeal
+        }).then( function(results){
+            console.log(results);
+        })
+    });
 });
     
 </script>
