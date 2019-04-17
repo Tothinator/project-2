@@ -89,7 +89,6 @@ router.get("/api/user_data", function(req, res) {
 router.post("/api/meals", function(req, res) {
 
     console.log(req.body);
-    return true;
     // db.Meal.findOrCreate({
     //     where: {
     //         name:
