@@ -76,8 +76,6 @@ router.get("/members/favorites", function(req, res) {
             //Pull data from database
             var recipeList = results[0].Meals;
             console.log(recipeList);
-            console.log(results[0].Meals[0].name);
-            console.log(results[0].Meals[1].name);
             var recipes = [];
             for (var i = 0; i < recipeList.length; i++){
 
@@ -89,6 +87,7 @@ router.get("/members/favorites", function(req, res) {
 
                 recipes.push(recipe);
             }
+            console.log("xxxxx")
             console.log(recipes);
             
 
