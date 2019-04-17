@@ -41,12 +41,6 @@ router.get("/members", isAuthenticated, function(req, res) {
 });
 
 
-// // Render 404 page for any unmatched routes
-// router.get("*", function(req, res) {
-//     res.render("404");
-// });
-
-
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
@@ -92,12 +86,29 @@ router.get("/api/user_data", function(req, res) {
     }
 });
 
+// eslint-disable-next-line no-unused-vars
+router.post("/api/meals", function(req, res) {
+
+    console.log(req.body);
+    // db.Meal.findOrCreate({
+    //     where: {
+    //         name:
+    //     }
+    // })
+
+});
+
 router.get("/form", function(req, res) {
-    if(!req.user) {
-        return res.redirect("/");
-    } else {
-        res.render("form", {user: req.user.username});
-    }
+    // if(!req.user) {
+    // return res.redirect("/");
+    // } else {
+    res.render("form" /*, {user: req.user.username} */);
+    // }
+});
+
+// // Render 404 page for any unmatched routes
+router.get("*", function(req, res) {
+    res.render("404");
 });
 
 module.exports = router;

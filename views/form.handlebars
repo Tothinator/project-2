@@ -136,8 +136,27 @@ $(function(){
                     healths.append(health);
                 };
                 
-                var recipeBtn=$("<a>").addClass("btn btn-primary recipe").text("Recipe").attr("id", "recipe-btn").attr("target", "_blank").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
-                var favoriteBtn=$("<a>").addClass("btn btn-primary").text("Favorite").attr("id", "favorite-btn").attr("data-title", data.hits[i].recipe.label).attr("data-image", data.hits[i].recipe.image).attr("data-url", data.hits[i].recipe.url).attr("data-yield", data.hits[i].recipe.yield).attr("data-dietLabels", data.hits[i].recipe.dietLabels).attr("data-healthLabels", data.hits[i].recipe.healthLabels).attr("data-ingredientLines", data.hits[i].recipe.ingredientLines).attr("data-calories", data.hits[i].recipe.calories).attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe")
+                    .attr("href", arr[i].url).attr("id", "recipe-btn")
+                    .attr("data-title", data.hits[i].recipe.label)
+                    .attr("data-image", data.hits[i].recipe.image)
+                    .attr("data-url", data.hits[i].recipe.url)
+                    .attr("data-yield", data.hits[i].recipe.yield)
+                    .attr("data-dietLabels", data.hits[i].recipe.dietLabels)
+                    .attr("data-healthLabels", data.hits[i].recipe.healthLabels)
+                    .attr("data-ingredientLines", data.hits[i].recipe.ingredientLines)
+                    .attr("data-calories", data.hits[i].recipe.calories)
+                    .attr("data-totalTime", data.hits[i].recipe.totalTime);
+                var favoriteBtn=$("<a>").addClass("btn btn-primary btn-favorite").text("Favorite")
+                    .data("title", data.hits[i].recipe.label)
+                    .data("image", data.hits[i].recipe.image)
+                    .data("url", data.hits[i].recipe.url)
+                    .data("yield", data.hits[i].recipe.yield)
+                    .data("dietLabels", data.hits[i].recipe.dietLabels.toString())
+                    .data("healthLabels", data.hits[i].recipe.healthLabels)
+                    .data("ingredientLines", data.hits[i].recipe.ingredientLines)
+                    .data("calories", data.hits[i].recipe.calories)
+                    .data("totalTime", data.hits[i].recipe.totalTime);
                 
                 innerdiv.append(title, yield, time, calories, iLabel, ingredients, dLabel, diets, hLabel, healths, recipeBtn, favoriteBtn);
                 div.append(img).append(innerdiv);
@@ -146,6 +165,35 @@ $(function(){
             }
         });
    });
+
+    $("#result").on("click", ".btn-favorite", function() {
+
+        var mealName = {
+            name: $(this).data("title")
+        }
+        var mealData = {
+            image: $(this).data("image"),
+            recipeURL: $(this).data("url"),
+            servings: $(this).data("yield"),
+            dietLabels: JSON.stringify($(this).data("dietLabels")),
+            healthLabels: JSON.stringify($(this).data("healthLabels")),
+            ingredients: JSON.stringify($(this).data("ingredientLines")),
+            calories: $(this).data("calories"),
+            time: $(this).data("totalTime"),
+        }
+
+        var newMeal = {
+            name: mealName,
+            data: mealData
+        }
+
+        $.ajax("/api/meals", {
+            method: "POST",
+            data: newMeal
+        }).then( function(results){
+            console.log(results);
+        })
+    });
    $(document).on('keypress',function(e) {
         if(e.which == 13) {
            $("#submit").click();
