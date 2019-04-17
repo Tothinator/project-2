@@ -4,46 +4,6 @@ var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 
 var router = express.Router();
-<<<<<<< HEAD
-=======
-
-
-
-
-//HTML ROUTES======================================================================================================
-router.get("/", function(req, res) {
-    //Checking if session exists for current user.
-    console.log(req.user);
-    if (req.user) {
-        return res.redirect("/members");
-    }
-
-    res.render("index", {
-        msg: "Welcome!"
-    });
-});
-
-// Load example page and pass in an example by id
-// router.get("/login", function(req, res) {
-//     //Session exists for the user
-//     console.log(req.user);
-//     if (req.user) {
-//         return res.redirect("/members");
-//     }
-
-//     //Else render the login.handlbars
-//     res.render("index");
-
-// });
-
-router.get("/members", isAuthenticated, function(req, res) {
-    console.log("reaching member page");
-    res.render("members", {user: req.user.username});
-
-});
-
-
->>>>>>> 3bcb3b111e10cd2bd842acc86a71e84ec2d09ce0
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
@@ -91,7 +51,6 @@ router.get("/api/user_data", function(req, res) {
     }
 });
 
-<<<<<<< HEAD
 
 
 //HTML ROUTES======================================================================================================
@@ -174,7 +133,6 @@ router.get("*", function(req, res) {
 
 
 
-=======
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
 
@@ -187,7 +145,6 @@ router.post("/api/meals", function(req, res) {
 
 });
 
->>>>>>> 3bcb3b111e10cd2bd842acc86a71e84ec2d09ce0
 router.get("/form", function(req, res) {
     // if(!req.user) {
     // return res.redirect("/");
