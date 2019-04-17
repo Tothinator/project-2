@@ -124,13 +124,6 @@ router.get("/", function(req, res) {
 
 
 
-// Render 404 page for any unmatched routes
-router.get("*", function(req, res) {
-    res.render("404");
-});
-
-
-
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
@@ -148,6 +141,46 @@ router.get("/form", function(req, res) {
 
     res.render("form");
 
+});
+
+router.post("/api/recipe", function(req, res) {
+	
+    axios.get(req.body.sendingURL).then(function(response) {
+        var data=response.data;
+        var arr=[];
+        
+        for (var i = 0; i < data.hits.length; i ++){
+            var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
+            
+            var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);          
+            var minutes = parseInt(data.hits[i].recipe.totalTime) % 60;
+            
+            var object = {
+                "image": data.hits[i].recipe.image,
+                "label": data.hits[i].recipe.label,
+                "url": data.hits[i].recipe.url,
+                "yield": data.hits[i].recipe.yield,
+                "dietLabels": data.hits[i].recipe.dietLabels,
+                "healthLabels": data.hits[i].recipe.healthLabels,
+                "ingredientLines": data.hits[i].recipe.ingredientLines,
+                "calories": Math.round(caloriesPer),
+                "totalTime": hours + " hours and " + minutes + " minutes"
+            };
+            arr.push(object);
+        }
+        res.json(arr);
+    }).catch(function(error) {
+	    if (error.response) {
+	      console.log(error.response.data);
+	      console.log(error.response.status);
+	      console.log(error.response.headers);
+	    } else if (error.request) {
+	      console.log(error.request);
+	    } else {
+	      console.log("Error", error.message);
+	    }
+	    console.log(error.config);
+	  });
 });
 
 // // Render 404 page for any unmatched routes
