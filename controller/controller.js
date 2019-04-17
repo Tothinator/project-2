@@ -26,15 +26,7 @@ router.post("/api/signup", function(req, res) {
     });
 });
 
-router.post("/members/favorites", function(req, res) {
-    //Posting favorties into database
 
-});
-
-router.post("/members/calendar", function(req, res) {
-    //Posting calendar entry into database
-
-});
 
 
 // Route for logging user out
@@ -69,24 +61,33 @@ router.get("/members/favorites", function(req, res) {
     if (!req.user) {
         return res.redirect("/");
     }
+    console.log(req.user);
+    console.log(req.user.username);
+    db.User.getMeals({
+        where: { username: req.user.username}
+    })
+        .then(function(results){
+            //Pull data from database
+            console.log(results);
+            res.render("favorites", {
+                user: req.user.username
+            });
 
-    //Pull data from database
-    res.render("favorites", {
-        user: req.user.username
-    });
+        });
+
+
 });
 
+router.get("/members", isAuthenticated, function(req, res) {
+    console.log("reaching member page");
+    res.render("members", {user: req.user.username});
 
-
-router.get("/members/calendar", function(req, res) {
-    //Posting favorties into database
-    
 });
+
 
 
 router.get("/", function(req, res) {
     //Checking if session exists for current user.
-    console.log(req.user);
     if (req.user) {
         return res.redirect("/members");
     }
@@ -96,11 +97,6 @@ router.get("/", function(req, res) {
     });
 });
 
-router.get("/members", isAuthenticated, function(req, res) {
-    console.log("reaching member page");
-    res.render("members", {user: req.user.username});
-
-});
 
 
 // Render 404 page for any unmatched routes
