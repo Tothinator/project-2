@@ -4,49 +4,12 @@ var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 
 var router = express.Router();
-
-
-
-
-//HTML ROUTES======================================================================================================
-router.get("/", function(req, res) {
-    //Checking if session exists for current user.
-    console.log(req.user);
-    if (req.user) {
-        return res.redirect("/members");
-    }
-
-    res.render("index", {
-        msg: "Welcome!"
-    });
-});
-
-// Load example page and pass in an example by id
-// router.get("/login", function(req, res) {
-//     //Session exists for the user
-//     console.log(req.user);
-//     if (req.user) {
-//         return res.redirect("/members");
-//     }
-
-//     //Else render the login.handlbars
-//     res.render("index");
-
-// });
-
-router.get("/members", isAuthenticated, function(req, res) {
-    console.log("reaching member page");
-    res.render("members", {user: req.user.username});
-
-});
-
-
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
-    console.log("going to members");
     res.json("/members");
 });
+
 //signing up account route
 router.post("/api/signup", function(req, res) {
     console.log(req.body.username);
@@ -55,7 +18,6 @@ router.post("/api/signup", function(req, res) {
         username: req.body.username,
         password: req.body.password
     }).then(function() {
-      
         res.redirect(307, "/api/login");
     }).catch(function(err) {
         console.log("Getting error");
@@ -63,6 +25,9 @@ router.post("/api/signup", function(req, res) {
         // res.status(422).json(err.errors[0].message);
     });
 });
+
+
+
 
 // Route for logging user out
 router.get("/logout", function(req, res) {
@@ -86,6 +51,88 @@ router.get("/api/user_data", function(req, res) {
     }
 });
 
+
+
+//HTML ROUTES======================================================================================================
+router.get("/members/favorites", function(req, res) {
+    //Checking if session exists for current user.
+    
+    console.log(req.user);
+    if (!req.user) {
+        return res.redirect("/");
+    }
+    // console.log(req.user.username);
+    db.User.findAll({
+        where: {id: req.user.id},
+        include: [{
+            model: db.Meal,
+            attributes: ["name", "image", "recipeURL"],
+            through: {
+                model: db.Favorite
+            }
+        }]
+    })
+        .then(function(results){
+            //Pull data from database
+            var recipeList = results[0].Meals;
+            console.log(recipeList);
+            console.log(results[0].Meals[0].name);
+            console.log(results[0].Meals[1].name);
+            var recipes = [];
+            for (var i = 0; i < recipeList.length; i++){
+
+                var recipe = {
+                    recipeName: recipeList[i].name,
+                    imageLink: recipeList[i].image,
+                    recipeLink: recipeList[i].recipeURL
+                };
+
+                recipes.push(recipe);
+            }
+            console.log(recipes);
+            
+
+
+            res.render("favorites", {
+                user: req.user.username,
+                recipes: recipes
+            });
+
+        });
+
+
+
+});
+
+router.get("/members", isAuthenticated, function(req, res) {
+    console.log("reaching member page");
+    res.render("members", {user: req.user.username});
+
+});
+
+
+
+router.get("/", function(req, res) {
+    //Checking if session exists for current user.
+    if (req.user) {
+        return res.redirect("/members");
+    }
+
+    res.render("index", {
+        msg: "Welcome!"
+    });
+});
+
+
+
+// Render 404 page for any unmatched routes
+router.get("*", function(req, res) {
+    res.render("404");
+});
+
+
+
+
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
 
@@ -99,11 +146,9 @@ router.post("/api/meals", function(req, res) {
 });
 
 router.get("/form", function(req, res) {
-    // if(!req.user) {
-    // return res.redirect("/");
-    // } else {
-    res.render("form" /*, {user: req.user.username} */);
-    // }
+
+    res.render("form");
+
 });
 
 // // Render 404 page for any unmatched routes

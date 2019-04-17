@@ -2,14 +2,25 @@ html {
   height: 100vh;
 }
 
+/* .navbar-dark, .bg-dark {
+  background-color: #3b8686 !important;
+}
+
 body {
-  background: url(https://tacoslosdesvelados.com/wp-content/uploads/2017/02/HANDMADE-1000.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color: #0b486b;
+  color: #79bd9a;
+}
+
+.nav-link:hover {
+  color: #cff09e;
 }
 
 .jumbotron {
-  background-color: #e9ecefcc;
+  background-color: #3b8686;
+} */
+
+.nav-link {
+  color: #f1fbf9;
 }
 
 .navbar {
@@ -22,8 +33,4 @@ body {
 
 #login-form, #signup-form {
   display: none;
-}
-
-.nav-link {
-  color: #ffffff;
 }

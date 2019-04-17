@@ -1,0 +1,22 @@
+<style>
+    img{
+        width: 200px;
+        height: 300px;
+    }
+
+</style>
+
+<h1>{{user}}'s' favorites</h1>
+
+<div class="favorite-container">
+    <div class="card-columns">
+        {{#each recipes}}
+        <div class="card">
+            <img src= {{this.imageLink}} class="card-img-top" alt="...">
+            <div class="card-body">
+            <a href={{this.recipeLink}}><h5 class="card-title">{{this.recipeName}}</h5></a>
+            </div>
+        </div>
+        {{/each}} 
+    </div>
+</div>
