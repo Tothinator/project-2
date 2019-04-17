@@ -101,7 +101,7 @@ router.get("/form", function(req, res) {
     // if(!req.user) {
     // return res.redirect("/");
     // } else {
-    res.render("form", /* {user: req.user.username} */);
+    res.render("form" /*, {user: req.user.username} */);
     // }
 });
 
