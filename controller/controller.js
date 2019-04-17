@@ -125,13 +125,6 @@ router.get("/", function(req, res) {
 
 
 
-// Render 404 page for any unmatched routes
-router.get("*", function(req, res) {
-    res.render("404");
-});
-
-
-
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
