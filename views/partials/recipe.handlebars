@@ -1,18 +1,32 @@
+<div class="card">
+    <img class="card-img-top" alt="Card Recipe Image" src="{{image}}">
+    <div class="card-body">
+        <h5 class="card-title">{{label}}</h5>
+        <p class="card-text">Servings: {{yield}}</p>
+        <p class="card-text">Cooking Time: {{totalTime}}</p>
+        <p class="card-text">Ingredients: {{ingredientLines}}</p>
+        <p class="card-text">Special Diets: {{dietLabels}}</p> 
+        <p class="card-text">Other Health Notes: {{healthLabels}}</p>
 
-
-
-
-                {{!-- var div=$("<div>").addClass("card").attr("style","width:18rem");
-                
-                var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);
-                
-                var innerdiv=$("<div>").addClass("card-body");
-                
-                var title=$("<h5>").addClass("card-title").text(arr[i].label);
-                    
-                var yield=$("<p>").addClass("card-text").text("Servings: " + arr[i].yield);
-                var time=$("<p>").addClass("card-text").text("Cooking Time: " + arr[i].totalTime);
-                var calories=$("<p>").addClass("card-text").text("Total Calories: " + arr[i].calories);
-                var ingredients=$("<p>").addClass("card-text").text("Ingredients: " + arr[i].ingredientLines);
-                var dietLabels=$("<p>").addClass("card-text").text("Special Diets: " + arr[i].dietLabels);
-                var healthLabels=$("<p>").addClass("card-text").text("Other Health Notes: " + arr[i].healthLabels); --}}
+        {{!-- Recipe Button doesn't need attributes, the later to add calendar function needs them  --}}
+        <button class="btn btn-primary btn-recipe">Recipe</button>
+        <button class="btn btn-primary btn-favorite"
+            data-title="{{label}}" data-image="{{image}}"
+            data-url="{{url}}" data-servings="{{yield}}"
+            data-dietLabels="{{dietLabels}}" data-healthLabels="{{healthLabels}}"
+            data-ingredientLines="{{ingredientLines}}" data-calories="{{calories}}"
+            data-totalTime="{{totalTime}}">
+            Favorite
+        </button>
+    </div>
+</div>
+                {{!-- var favoriteBtn=$("<a>").addClass("btn btn-primary btn-favorite").text("Favorite")
+                    .data("title", data.hits[i].recipe.label)
+                    .data("image", data.hits[i].recipe.image)
+                    .data("url", data.hits[i].recipe.url)
+                    .data("yield", data.hits[i].recipe.yield)
+                    .data("dietLabels", data.hits[i].recipe.dietLabels.toString())
+                    .data("healthLabels", data.hits[i].recipe.healthLabels)
+                    .data("ingredientLines", data.hits[i].recipe.ingredientLines)
+                    .data("calories", data.hits[i].recipe.calories)
+                    .data("totalTime", data.hits[i].recipe.totalTime); --}}
