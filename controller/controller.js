@@ -2,9 +2,17 @@ var express = require("express");
 var db = require("../models");
 var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
+var axios = require("axios");
 
 var router = express.Router();
-var axios = require("axios");
+
+
+var APIID = process.env.APIID || "f9df3797";
+var APIKEY = process.env.RECIPEAPI || "0f26dbad1499ec207c258d835d6eb351";
+
+var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8&q=";
+
+
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
@@ -78,7 +86,7 @@ router.get("/members/favorites", function(req, res) {
             var recipeList = results[0].Meals;
             console.log(recipeList);
             console.log(results[0].Meals[0].name);
-            console.log(results[0].Meals[1].name);
+            // console.log(results[0].Meals[1].name);
             var recipes = [];
             for (var i = 0; i < recipeList.length; i++){
 
@@ -125,64 +133,111 @@ router.get("/", function(req, res) {
 });
 
 
-
-
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
+    
+    var data = req.body.data;
 
-    console.log(req.body);
-    // db.Meal.findOrCreate({
-    //     where: {
-    //         name:
-    //     }
-    // })
+    // console.log(req.body);
+    // console.log(req.body.url);
+    // console.log(data);
+
+
+    db.Meal.findOrCreate({
+        where: {
+            recipeURL: req.body.url
+        },
+        defaults: data
+    }).then(function(result) {
+
+        var meal = result[0].dataValues;
+
+        console.log(result[0].dataValues);
+
+        var id = meal.id;
+
+        if (req.body.table === "favorite") {
+            // add meal to favorites for current user
+
+            db.Favorite.create({
+                UserId: req.user.id,
+                MealId: id
+            }).then( function () {
+                res.send("Added meal " + meal.name + 
+                " to user's favorites");
+            });
+
+        } else if (req.body.table === "day") {
+            // add meal to calendar day for current user
+            res.send("Added meal " + meal.get({ plain: true }).name + 
+            " to user's specified date");
+        } else {
+            res.send("Error occured");
+        }
+
+    });
 
 });
 
 router.get("/form", function(req, res) {
 
-    res.render("form");
+    res.render("form" /*, {
+        meals: req.meals
+    } */);
+
+});
+
+router.get("/form/results", function(req, res){
+
+    console.log(req);
+
+    res.json(req);
 
 });
 
 router.post("/api/recipe", function(req, res) {
-	
-    axios.get(req.body.sendingURL).then(function(response) {
-        var data=response.data;
-        var arr=[];
-        
-        for (var i = 0; i < data.hits.length; i ++){
-            var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
+    
+    var queryParams = req.body;
+    
+    axios.get(APIURL + queryParams.food + queryParams.health + queryParams.diet)
+        .then(function(response) {
+            var data = response.data.hits;
+            var meals=[];
             
-            var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);          
-            var minutes = parseInt(data.hits[i].recipe.totalTime) % 60;
-            
-            var object = {
-                "image": data.hits[i].recipe.image,
-                "label": data.hits[i].recipe.label,
-                "url": data.hits[i].recipe.url,
-                "yield": data.hits[i].recipe.yield,
-                "dietLabels": data.hits[i].recipe.dietLabels,
-                "healthLabels": data.hits[i].recipe.healthLabels,
-                "ingredientLines": data.hits[i].recipe.ingredientLines,
-                "calories": Math.round(caloriesPer),
-                "totalTime": hours + " hours and " + minutes + " minutes"
-            };
-            arr.push(object);
-        }
-        res.json(arr);
-    }).catch(function(error) {
-	    if (error.response) {
-	      console.log(error.response.data);
-	      console.log(error.response.status);
-	      console.log(error.response.headers);
-	    } else if (error.request) {
-	      console.log(error.request);
-	    } else {
-	      console.log("Error", error.message);
-	    }
-	    console.log(error.config);
-	  });
+            for (var i = 0; i < data.length; i ++){
+
+                var object = {
+                    "image": data[i].recipe.image,
+                    "label": data[i].recipe.label,
+                    "url": data[i].recipe.url,
+                    "yield": data[i].recipe.yield,
+                    "dietLabels": data[i].recipe.dietLabels,
+                    "healthLabels": data[i].recipe.healthLabels,
+                    "ingredientLines": data[i].recipe.ingredientLines,
+                    "calories": data[i].recipe.calories,
+                    "totalTime": data[i].recipe.totalTime
+                };
+                meals.push(object);
+            }
+
+            req.meals = meals;
+
+            // res.redirect("/form/results");
+
+            res.render("form", {meals: meals});
+
+        }).catch(function(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error", error.message);
+            }
+            console.log(error.config);
+        });
 });
 
 // // Render 404 page for any unmatched routes
