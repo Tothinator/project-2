@@ -80,6 +80,7 @@ $("#result").on("click", ".btn-favorite", function() {
     });
 });
 
+
 $(document).on("click", ".recipe", function(){
     $("#recipe").click();
     $("iframe").attr("src",$(this).data("url"));
