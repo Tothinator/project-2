@@ -42,6 +42,10 @@ body {
   font-family: 'Mr Dafoe', cursive;
   color: #bdeaee;
 }
+a:hover {
+  color:#bdeaee;
+  text-decoration: none;
+}
 
 .list-group-item {
   line-height: 2.5;

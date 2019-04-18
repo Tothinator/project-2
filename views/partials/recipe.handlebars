@@ -1,32 +1,27 @@
-<div class="card-columns">
-    <div class="card">
-        <img class="card-img-top" alt="Card Recipe Image" src="{{image}}">
-        <div class="card-body">
-            <h5 class="card-title">{{label}}</h5>
-            <p class="card-text">Servings: {{yield}}</p>
-            <p class="card-text">Cooking Time: {{totalTime}}</p>
-            <ul class="card-text">Ingredients: 
-                {{#each ingredientLines}}
-                    <li> {{this}} </li>
-                {{/each}}
-            </ul>
-            <p class="card-text">Special Diets: {{dietLabels}}</p> 
-            <ul class="card-text">Other Health Notes: 
-                {{#each healthLabels}}
-                    <li>{{this}}</li>
-                {{/each}}
-            </ul>
-
-            {{!-- Recipe Button doesn't need attributes, the later to add calendar function needs them  --}}
-            <button class="btn btn-primary btn-recipe">Recipe</button>
-            <button class="btn btn-primary btn-favorite"
-                data-title="{{label}}" data-image="{{image}}"
-                data-url="{{url}}" data-servings="{{yield}}"
-                data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
-                data-ingredients="{{ingredientLines}}" data-calories="{{calories}}"
-                data-time="{{totalTime}}">
-                Favorite
-            </button>
-        </div>
+<div class="card">
+    <img class="card-img-top" alt="Card Recipe Image" src="{{image}}">
+    <div class="card-body">
+        <h5 class="card-title">{{label}}</h5>
+        <p class="card-text">Servings: {{yield}}</p>
+        <p class="card-text">Cooking Time: {{totalTime}}</p>
+        <ul class="card-text">Ingredients:
+            {{#each ingredientLines}}
+            <li> {{this}} </li>
+            {{/each}}
+        </ul>
+        <p class="card-text">Special Diets: {{dietLabels}}</p>
+        <ul class="card-text">Other Health Notes:
+            {{#each healthLabels}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+        {{!-- Recipe Button doesn't need attributes, the later to add calendar function needs them  --}}
+        {{!-- <button class="btn btn-primary btn-recipe">Recipe</button> --}}
+        <a href={{url}} target="_blank" class="btn btn-primary">Recipe</a>
+        <button class="btn btn-primary btn-favorite" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
+            data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
+            data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
+            Favorite
+        </button>
     </div>
 </div>
