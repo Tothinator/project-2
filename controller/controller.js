@@ -6,12 +6,12 @@ var isAuthenticated = require("../config/middleware/isAuthenticated");
 var router = express.Router();
 //API ROUTES======================================================================================================
 
+//Getting calendar data from Day Table
 router.get("/api/calendar/", function(req, res){
     if (!req.user) {
         return res.redirect("/");
     }
 
-    console.log("getting data from Days table");
     db.User.findAll({
         where: {id: req.user.id},
         include: [{
@@ -28,6 +28,7 @@ router.get("/api/calendar/", function(req, res){
         res.json(data);
     });
 });
+
 
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
