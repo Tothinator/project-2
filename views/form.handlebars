@@ -1,19 +1,19 @@
 <div id="accordion">
     {{> search }}
     <h3 class="result-header" id="click">Result</h3>
-    <div id="result">
+    <div class="card-columns" id="result">
         {{#if meals}}
             {{#each meals}}
                 {{> recipe }}
             {{/each}}
         {{/if}}
     </div>
-    <h3 class="result-header" id="recipe">Recipe</h3>
+    {{!-- <h3 class="result-header" id="recipe">Recipe</h3>
     <div>
        <p>
             <iframe width="100%" height="600" src="" marginwidth="0" marginheight="0" frameborder="0"></iframe>
        </p>
-    </div>
+    </div> --}}
 </div>
 
 <script type="text/javascript" src="js/form.js"></script>

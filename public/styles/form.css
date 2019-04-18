@@ -64,3 +64,7 @@ h3 {
 .result-header {
     background-color: #3b8686 !important;
 }
+
+.card-columns {
+    overflow:hidden;
+}
