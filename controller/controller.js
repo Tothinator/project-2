@@ -239,8 +239,7 @@ router.post("/api/recipe", function(req, res) {
             console.log(error.config);
         });
 });
-
-// // Render 404 page for any unmatched routes
+//Render 404 page for any unmatched routes
 router.get("*", function(req, res) {
     res.render("404");
 });
