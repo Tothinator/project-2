@@ -173,10 +173,6 @@ router.get("/", function(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
-<<<<<<< HEAD
-
-    console.log(req.body);
-=======
     
     if (!req.user) {
         return res.json({
@@ -190,7 +186,6 @@ router.post("/api/meals", function(req, res) {
     console.log(data);
 
 
->>>>>>> c7f87b6095ebd4db7694f30be5d92b13c0b3d5f3
     db.Meal.findOrCreate({
         where: {
             recipeURL: req.body.url
@@ -230,14 +225,13 @@ router.post("/api/meals", function(req, res) {
 });
 
 router.get("/form", function(req, res) {
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     // if(!req.user) {
     // return res.redirect("/");
     // } else {
     res.render("form" /*, {user: req.user.username} */);
     // }
-=======
+
 
     res.render("form" /*, {
         meals: req.meals
@@ -305,7 +299,6 @@ router.post("/form", function(req, res) {
             }
             // console.log(error.config);
         });
->>>>>>> c7f87b6095ebd4db7694f30be5d92b13c0b3d5f3
 });
 
 // // Render 404 page for any unmatched routes
