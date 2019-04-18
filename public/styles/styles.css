@@ -51,6 +51,11 @@ body {
   display: none;
 }
 
+.calendar {
+  margin: 40px;
+  background-color: #FFFFFF;
+  color: black;
+}
 .welcome {
   background-image: url("./images/katie-smith-104748-unsplash.jpg");
   height: 100px;

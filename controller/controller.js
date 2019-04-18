@@ -135,7 +135,7 @@ router.get("/", function(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
-    
+
     var data = req.body.data;
 
     // console.log(req.body);
@@ -163,13 +163,13 @@ router.post("/api/meals", function(req, res) {
                 UserId: req.user.id,
                 MealId: id
             }).then( function () {
-                res.send("Added meal " + meal.name + 
+                res.send("Added meal " + meal.name +
                 " to user's favorites");
             });
 
         } else if (req.body.table === "day") {
             // add meal to calendar day for current user
-            res.send("Added meal " + meal.get({ plain: true }).name + 
+            res.send("Added meal " + meal.get({ plain: true }).name +
             " to user's specified date");
         } else {
             res.send("Error occured");
@@ -196,14 +196,14 @@ router.get("/form/results", function(req, res){
 });
 
 router.post("/api/recipe", function(req, res) {
-    
+
     var queryParams = req.body;
-    
+
     axios.get(APIURL + queryParams.food + queryParams.health + queryParams.diet)
         .then(function(response) {
             var data = response.data.hits;
             var meals=[];
-            
+
             for (var i = 0; i < data.length; i ++){
 
                 var object = {
@@ -238,6 +238,16 @@ router.post("/api/recipe", function(req, res) {
             }
             console.log(error.config);
         });
+});
+router.get("/members/calendar", function(req, res) {
+    console.log("here");
+    if(req.user) {
+        res.render("calendar");
+    } else {
+        res.redirect("/");
+    }
+
+
 });
 //Render 404 page for any unmatched routes
 router.get("*", function(req, res) {
