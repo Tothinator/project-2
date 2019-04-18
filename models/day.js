@@ -3,12 +3,12 @@ module.exports = function(sequelize, DataTypes) {
     var Day = sequelize.define("Day", {
 
         startDate: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATETIME,
             allowNull: false
         },
 
         endDate: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATETIME,
             allowNull: false
         }
     });
@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     Day.associate = function(models){
         models.Day.belongsTo(models.User);
         models.Day.belongsTo(models.Meal);
-    }
+    };
 
 
     return Day;
