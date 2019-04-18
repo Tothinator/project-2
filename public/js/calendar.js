@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $.get("/calendar").then(function(data){
+    $.get("/calendar").then(function(){
 
         $("#calendar").fullCalendar({
             header: {
@@ -69,7 +69,7 @@ $(document).ready(function() {
                     start: "2019-04-28"
                 }
             ],
-            eventClick: function(calEvent, jsEvent, view, resourceObj) {
+            eventClick: function(calEvent) {
                 swal({
                     title: calEvent.title,
                     icon: "success",

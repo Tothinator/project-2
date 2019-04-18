@@ -30,6 +30,11 @@ module.exports = function(app) {
 
     });
 
+    app.get("/calendar", isAuthenticated, function(req, res) {
+
+        res.render("calendar");
+
+    });
 
     // Render 404 page for any unmatched routes
     app.get("*", function(req, res) {

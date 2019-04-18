@@ -2,6 +2,7 @@ var express = require("express");
 var db = require("../models");
 var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
+var axios= require("axios");
 
 var router = express.Router();
 //API ROUTES======================================================================================================
@@ -76,8 +77,6 @@ router.get("/members/favorites", function(req, res) {
             //Pull data from database
             var recipeList = results[0].Meals;
             console.log(recipeList);
-            console.log(results[0].Meals[0].name);
-            console.log(results[0].Meals[1].name);
             var recipes = [];
             for (var i = 0; i < recipeList.length; i++){
 
@@ -145,17 +144,17 @@ router.get("/form", function(req, res) {
 });
 
 router.post("/api/recipe", function(req, res) {
-	
+
     axios.get(req.body.sendingURL).then(function(response) {
         var data=response.data;
         var arr=[];
-        
+
         for (var i = 0; i < data.hits.length; i ++){
             var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
-            
-            var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);          
+
+            var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);
             var minutes = parseInt(data.hits[i].recipe.totalTime) % 60;
-            
+
             var object = {
                 "image": data.hits[i].recipe.image,
                 "label": data.hits[i].recipe.label,
@@ -182,6 +181,15 @@ router.post("/api/recipe", function(req, res) {
 	    }
 	    console.log(error.config);
 	  });
+});
+router.get("/members/calendar", function(req, res) {
+    if(req.user) {
+        res.render("calendar");
+    } else {
+        res.redirect("/");
+    }
+
+
 });
 
 // // Render 404 page for any unmatched routes

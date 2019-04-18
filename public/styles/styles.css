@@ -34,3 +34,9 @@ body {
 #login-form, #signup-form {
   display: none;
 }
+
+.calendar {
+  margin: 40px;
+  background-color: #FFFFFF;
+  color: black;
+}
