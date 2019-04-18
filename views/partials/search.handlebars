@@ -1,11 +1,11 @@
 <h3 class="bg-dark" id="init">Find Your Recipe</h3>
-<div>
+<form method="POST" action="/form">
     <fieldset>
         <legend>Cuisine</legend>
         <ul>
             <li>
                 <label for="food" class="title">Recipe</label>
-                <input type="text" size="40" id="food" required>
+                <input name="food" type="text" size="40" id="food" required>
             </li>
         </ul>
     </fieldset>
@@ -14,7 +14,7 @@
         <ul>
             <li>
                 <label for="diet">Diet:
-                    <select id="diet">
+                    <select name="diet" id="diet">
                         <option value=""></option>
                         <option value="balanced">balanced</option>
                         <option value="high protein">high protein</option>
@@ -24,7 +24,7 @@
                 </label>
             </li>
             <li>
-                <label id="health">Health : <br>
+                <label id="health">Health: <br>
                     <label for="vegan">vegan</label>
                     <input type="checkbox" id="vegan" name="health" value="vegan">
                     <label for="vegetarian">vegetarian</label>
@@ -44,4 +44,4 @@
     <div class="centered">
         <input type="submit" id ="submit" class="btn btn-primary" value="Let's cook!">
     </div>
-</div>
+</form>

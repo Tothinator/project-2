@@ -173,8 +173,24 @@ router.get("/", function(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
+<<<<<<< HEAD
 
     console.log(req.body);
+=======
+    
+    if (!req.user) {
+        return res.json({
+            status: "not logged in"
+        });
+    }
+    var data = req.body.data;
+
+    // console.log(req.body);
+    // console.log(req.body.url);
+    console.log(data);
+
+
+>>>>>>> c7f87b6095ebd4db7694f30be5d92b13c0b3d5f3
     db.Meal.findOrCreate({
         where: {
             recipeURL: req.body.url
@@ -188,7 +204,9 @@ router.post("/api/meals", function(req, res) {
 
         var id = meal.id;
 
-        if (req.body.table === "favorite") {
+        if (req.user === undefined) {
+            res.redirect("/");
+        } else if (req.body.table === "favorite") {
             // add meal to favorites for current user
 
             db.Favorite.create({
@@ -213,11 +231,81 @@ router.post("/api/meals", function(req, res) {
 
 router.get("/form", function(req, res) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     // if(!req.user) {
     // return res.redirect("/");
     // } else {
     res.render("form" /*, {user: req.user.username} */);
     // }
+=======
+
+    res.render("form" /*, {
+        meals: req.meals
+    } */);
+
+});
+
+router.post("/form", function(req, res) {
+
+    console.log(req.body);
+    var health = "";
+
+    var diet = "";
+
+    if (req.body.health !== undefined) {
+        if(req.body.health.length !== 0 && typeof req.body.health === "array") {
+            req.body.health.forEach(function(i) {
+                health=health+"&health="+i;
+            });
+        } else if (req.body.health !== "") {
+            health = "&health=" + req.body.health;
+        }
+    }
+
+    if (req.body.diet !== "") {
+        diet = "&diet=" + req.body.diet;
+    }
+
+    console.log(APIURL + req.body.food + health + diet);
+
+    axios.get(APIURL + req.body.food + health + diet)
+        .then(function(response) {
+            var data = response.data.hits;
+            var meals=[];
+
+            for (var i = 0; i < data.length; i ++){
+
+                var object = {
+                    "image": data[i].recipe.image,
+                    "label": data[i].recipe.label,
+                    "url": data[i].recipe.url,
+                    "yield": data[i].recipe.yield,
+                    "dietLabels": data[i].recipe.dietLabels,
+                    "healthLabels": data[i].recipe.healthLabels,
+                    "ingredientLines": data[i].recipe.ingredientLines,
+                    "calories": data[i].recipe.calories,
+                    "totalTime": data[i].recipe.totalTime
+                };
+                meals.push(object);
+            }
+
+            // console.log(meals); 
+
+            res.render("form", {meals: meals});
+
+        }).catch(function(error) {
+            if (error.response) {
+                // console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error", error.message);
+            }
+            // console.log(error.config);
+        });
+>>>>>>> c7f87b6095ebd4db7694f30be5d92b13c0b3d5f3
 });
 
 // // Render 404 page for any unmatched routes
