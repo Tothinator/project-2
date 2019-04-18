@@ -135,12 +135,17 @@ router.get("/", function(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
-
+    
+    if (!req.user) {
+        return res.json({
+            status: "not logged in"
+        });
+    }
     var data = req.body.data;
 
     // console.log(req.body);
     // console.log(req.body.url);
-    // console.log(data);
+    console.log(data);
 
 
     db.Meal.findOrCreate({
@@ -156,7 +161,9 @@ router.post("/api/meals", function(req, res) {
 
         var id = meal.id;
 
-        if (req.body.table === "favorite") {
+        if (req.user === undefined) {
+            res.redirect("/");
+        } else if (req.body.table === "favorite") {
             // add meal to favorites for current user
 
             db.Favorite.create({
@@ -187,19 +194,30 @@ router.get("/form", function(req, res) {
 
 });
 
-router.get("/form/results", function(req, res){
+router.post("/form", function(req, res) {
 
-    console.log(req);
+    console.log(req.body);
+    var health = "";
 
-    res.json(req);
+    var diet = "";
 
-});
+    if (req.body.health !== undefined) {
+        if(req.body.health.length !== 0 && typeof req.body.health === "array") {
+            req.body.health.forEach(function(i) {
+                health=health+"&health="+i;
+            });
+        } else if (req.body.health !== "") {
+            health = "&health=" + req.body.health;
+        }
+    }
 
-router.post("/api/recipe", function(req, res) {
+    if (req.body.diet !== "") {
+        diet = "&diet=" + req.body.diet;
+    }
 
-    var queryParams = req.body;
+    console.log(APIURL + req.body.food + health + diet);
 
-    axios.get(APIURL + queryParams.food + queryParams.health + queryParams.diet)
+    axios.get(APIURL + req.body.food + health + diet)
         .then(function(response) {
             var data = response.data.hits;
             var meals=[];
@@ -220,15 +238,13 @@ router.post("/api/recipe", function(req, res) {
                 meals.push(object);
             }
 
-            req.meals = meals;
-
-            // res.redirect("/form/results");
+            // console.log(meals); 
 
             res.render("form", {meals: meals});
 
         }).catch(function(error) {
             if (error.response) {
-                console.log(error.response.data);
+                // console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
             } else if (error.request) {
@@ -236,7 +252,7 @@ router.post("/api/recipe", function(req, res) {
             } else {
                 console.log("Error", error.message);
             }
-            console.log(error.config);
+            // console.log(error.config);
         });
 });
 router.get("/members/calendar", function(req, res) {
