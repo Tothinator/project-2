@@ -18,7 +18,8 @@
             </ul>
 
             {{!-- Recipe Button doesn't need attributes, the later to add calendar function needs them  --}}
-            <button class="btn btn-primary btn-recipe">Recipe</button>
+            {{!-- <button class="btn btn-primary btn-recipe">Recipe</button> --}}
+            <a href={{url}} target="_blank" class="btn btn-primary">Recipe</a>
             <button class="btn btn-primary btn-favorite"
                 data-title="{{label}}" data-image="{{image}}"
                 data-url="{{url}}" data-servings="{{yield}}"
