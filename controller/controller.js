@@ -2,8 +2,16 @@ var express = require("express");
 var db = require("../models");
 var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
+var axios = require("axios");
 
 var router = express.Router();
+
+var APIID = process.env.APIID || "f9df3797";
+var APIKEY = process.env.RECIPEAPI || "0f26dbad1499ec207c258d835d6eb351";
+
+var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8&q=";
+
+
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
@@ -123,6 +131,7 @@ router.get("/", function(req, res) {
     });
 });
 
+
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
     
@@ -138,14 +147,13 @@ router.post("/api/meals", function(req, res) {
             recipeURL: req.body.url
         },
         defaults: data
-    }).then(([meal, created]) => {
+    }).then(function(result) {
 
-        var id = meal.get({ plain: true }).id;
+        var meal = result[0].dataValues;
 
-        console.log(meal.get({
-            plain: true
-        }))
-        console.log(created)
+        console.log(result[0].dataValues);
+
+        var id = meal.id;
 
         if (req.body.table === "favorite") {
             // add meal to favorites for current user
@@ -153,10 +161,10 @@ router.post("/api/meals", function(req, res) {
             db.Favorite.create({
                 UserId: req.user.id,
                 MealId: id
-            }).then( function (results) {
-                res.send("Added meal " + meal.get({ plain: true }).name + 
+            }).then( function () {
+                res.send("Added meal " + meal.name + 
                 " to user's favorites");
-            })
+            });
 
         } else if (req.body.table === "day") {
             // add meal to calendar day for current user
@@ -172,8 +180,63 @@ router.post("/api/meals", function(req, res) {
 
 router.get("/form", function(req, res) {
 
-    res.render("form");
+    res.render("form" /*, {
+        meals: req.meals
+    } */);
 
+});
+
+router.get("/form/results", function(req, res){
+
+    console.log(req);
+
+    res.json(req);
+
+});
+
+router.post("/api/recipe", function(req, res) {
+    
+    var queryParams = req.body;
+    
+    axios.get(APIURL + queryParams.food + queryParams.health + queryParams.diet)
+        .then(function(response) {
+            var data = response.data.hits;
+            var meals=[];
+            
+            for (var i = 0; i < data.length; i ++){
+
+                var object = {
+                    "image": data[i].recipe.image,
+                    "label": data[i].recipe.label,
+                    "url": data[i].recipe.url,
+                    "yield": data[i].recipe.yield,
+                    "dietLabels": data[i].recipe.dietLabels,
+                    "healthLabels": data[i].recipe.healthLabels,
+                    "ingredientLines": data[i].recipe.ingredientLines,
+                    "calories": data[i].recipe.calories,
+                    "totalTime": data[i].recipe.totalTime
+                };
+                meals.push(object);
+            }
+
+            req.meals = meals;
+
+            // res.redirect("/form/results");
+
+            res.render("form", {meals: meals});
+
+        }).catch(function(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error", error.message);
+            }
+            console.log(error.config);
+        });
 });
 
 // // Render 404 page for any unmatched routes

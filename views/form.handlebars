@@ -1,48 +1,17 @@
 <div id="accordion">
-    <h3 class="bg-dark">Find your Recipe</h3>
-    <div>
-        <fieldset>
-            <legend>Cuisine</legend>
-            <ul>
-                <li>
-                    <label for="food" class="title">foodname</label>
-                    <input type="text" size="40" id="food" required>
-                </li>
-            </ul>
-        </fieldset>
-        <fieldset>
-            <legend>Option</legend>
-            <ul>
-                <li>
-                    <label for="diet">Diet:
-                        <select id="diet">
-                            <option value=""></option>
-                            <option value="balanced">balanced</option>
-                            <option value="high protein">high protein</option>
-                            <option value="low-fat">low-fat</option>
-                            <option value="low-carb">low-carb</option>
-                        </select>
-                    </label>
-                </li>
-                <li>
-                    <label id="health">Health : <br>
-                        <input type="checkbox" id="vegan" name="health" value="vegan"><label for="vegan">vegan</label>
-                        <input type="checkbox" id="vegetarian" name="health" value="vegetarian"><label for="vegetarian">vegetarian</label>
-                        <input type="checkbox" id="sugar-conscious" name="health" value="sugar-conscious"><label for="sugar-conscious">sugar-conscious</label><br>
-                        <input type="checkbox" id="peanut-free" name="health" value="peanut-free"><label for="peanut-free">peanut-free</label>
-                        <input type="checkbox" id="tree-nut-free" name="health" value="tree-nut-free"><label for="tree-nut-free">tree-nut-free</label>
-                        <input type="checkbox" id="alcohol-free" name="health" value="alcohol-free"><label for="alcohol-free">alcohol-free</label>
-                    </label>
-                </li>
-            </ul>
-        </fieldset>
-        <div class="centered">
-            <input class="btn btn-primary" type="submit" id ="submit" value="Let's cook">
-        </div>
+    {{> search }}
+    <h3 id="click">Result</h3>
+    <div id="result">
+        <h1>DON'T FREAK OUT!! RESULTS NOT DISPLAYING NEED TO FIGURE OUT HOW TO RE-RENDER SAME PAGE WITH NEW HBS INFO</h1>
+
+        <h2>Look in the console to see how the webpage should look, having trouble displaying though!</h2>
+        {{#if meals}}
+            {{#each meals}}
+                {{> recipe }}
+            {{/each}}
+        {{/if}}
     </div>
-    <h3 class="bg-dark" id="click">Result</h3>
-    <div id="result"></div>
-    <h3 class="bg-dark" id="recipe">Recipe</h3>
+    <h3 id="recipe">Recipe</h3>
     <div>
        <p>
             <iframe width="100%" height="600" src="" marginwidth="0" marginheight="0" frameborder="0"></iframe>
@@ -50,156 +19,4 @@
     </div>
 </div>
 
-<script>
-$(function(){
-    
-    // $("#accordion").accordion();
-    $("#submit").on("click", function(e){
-        
-        e.preventDefault;
-
-        if($("#food").val()==="") {
-            return $("#food").focus();
-        }
-
-        var diet="";
-        var health="";
-        var arr = [];
-        $("#result").empty();
-        $("#click").click();
-        
-        if($("[name='health']:checked").length!=0) {
-            $.each($("[name='health']:checked"), function(i, element) {
-                health=health+"&health="+element.value;
-            });
-        }
-        
-        if($("#diet").val()!="") {
-            diet="&diet=";
-            diet=diet+$(":selected").val();
-        }
- 
-        var url = "https://api.edamam.com/search?app_id=d7d86c16&app_key=de28b35c4fbd92aecc64e7f389a73879&from=0&to=8&q="+$("#food").val()+health+diet;
-        $.ajax({
-            url:url,
-            method: "GET"
-        }).then(function(data) {
-            console.log(data);
-          
-            for (var i = 0; i < data.hits.length; i ++){
-                var caloriesPer = parseFloat(data.hits[i].recipe.calories)/parseFloat(data.hits[i].recipe.yield);
-                
-                var hours = Math.floor( parseInt(data.hits[i].recipe.totalTime) / 60);          
-                var minutes = parseInt(data.hits[i].recipe.totalTime) % 60;
-                
-                var object = {
-                    "image": data.hits[i].recipe.image,
-                    "label": data.hits[i].recipe.label,
-                    "url": data.hits[i].recipe.url,
-                    "yield": data.hits[i].recipe.yield,
-                    "dietLabels": data.hits[i].recipe.dietLabels,
-                    "healthLabels": data.hits[i].recipe.healthLabels,
-                    "ingredientLines": data.hits[i].recipe.ingredientLines,
-                    "calories": Math.round(caloriesPer),
-                    "totalTime": hours + " hours and " + minutes + " minutes"
-                };
-                arr.push(object);
-            }
-
-            for (var i=0;i<arr.length;i++)  {
-                var div=$("<div>").addClass("card").attr("style","width:18rem");     
-                var img=$("<img>").addClass("card-img-top").attr("alt","Card image cap").attr("src",arr[i].image);             
-                var innerdiv=$("<div>").addClass("card-body");              
-                var title=$("<h5>").addClass("card-title").text(arr[i].label);                 
-                var yield=$("<p>").addClass("card-text").html("<span class='bold'>Servings:</span> " + arr[i].yield);
-                var time=$("<p>").addClass("card-text").html("<span class='bold'>Cooking Time:</span> " + arr[i].totalTime);
-                var calories=$("<p>").addClass("card-text").html("<span class='bold'>Calories:</span> " + arr[i].calories);
-                
-                var iLabel=$("<p>").text("Ingredients: ").addClass("bold");
-                var ingredients = $("<div>").addClass("card-text");
-                for (var j = 0; j < arr[i].ingredientLines.length; j ++){
-                    var ingredient = $("<p>").text(arr[i].ingredientLines[j] + "\n");
-                    ingredients.append(ingredient);
-                };     
-                
-                var dLabel=$("<p>").text("Diets: ").addClass("bold");
-                var diets=$("<div>").addClass("card-text");
-                for (var k = 0; k < arr[i].dietLabels.length; k ++){
-                    var diet = $("<p>").text(arr[i].dietLabels[k] + "\n");
-                    diets.append(diet);
-                };
-                
-                var hLabel=$("<p>").text("Other Health Notes: ").addClass("bold");
-                var healths=$("<div>").addClass("card-text");
-                for (var l = 0; l < arr[i].healthLabels.length; l ++){
-                    var health = $("<p>").text(arr[i].healthLabels[l] + "\n");
-                    healths.append(health);
-                };
-                
-                var recipeBtn=$("<a>").addClass("btn btn-primary").text("Recipe")
-                    .attr("href", arr[i].url).attr("id", "recipe-btn")
-                    .attr("data-title", data.hits[i].recipe.label)
-                    .attr("data-image", data.hits[i].recipe.image)
-                    .attr("data-url", data.hits[i].recipe.url)
-                    .attr("data-yield", data.hits[i].recipe.yield)
-                    .attr("data-dietLabels", data.hits[i].recipe.dietLabels)
-                    .attr("data-healthLabels", data.hits[i].recipe.healthLabels)
-                    .attr("data-ingredientLines", data.hits[i].recipe.ingredientLines)
-                    .attr("data-calories", data.hits[i].recipe.calories)
-                    .attr("data-totalTime", data.hits[i].recipe.totalTime);
-                var favoriteBtn=$("<a>").addClass("btn btn-primary btn-favorite").text("Favorite")
-                    .data("title", data.hits[i].recipe.label)
-                    .data("image", data.hits[i].recipe.image)
-                    .data("url", data.hits[i].recipe.url)
-                    .data("yield", data.hits[i].recipe.yield)
-                    .data("dietLabels", data.hits[i].recipe.dietLabels.toString())
-                    .data("healthLabels", data.hits[i].recipe.healthLabels)
-                    .data("ingredientLines", data.hits[i].recipe.ingredientLines)
-                    .data("calories", data.hits[i].recipe.calories)
-                    .data("totalTime", data.hits[i].recipe.totalTime);
-                
-                innerdiv.append(title, yield, time, calories, iLabel, ingredients, dLabel, diets, hLabel, healths, recipeBtn, favoriteBtn);
-                div.append(img).append(innerdiv);
-                
-                $("#result").append(div);
-            }
-        });
-   });
-
-    $("#result").on("click", ".btn-favorite", function() {
-
-        var mealData = {
-            name: $(this).data("title"),
-            image: $(this).data("image"),
-            servings: $(this).data("yield"),
-            dietLabels: JSON.stringify($(this).data("dietLabels")),
-            healthLabels: JSON.stringify($(this).data("healthLabels")),
-            ingredients: JSON.stringify($(this).data("ingredientLines")),
-            calories: $(this).data("calories"),
-            time: $(this).data("totalTime"),
-        }
-
-        $.ajax("/api/meals", {
-            method: "POST",
-            data: {
-                url: $(this).data("url"),
-                data: mealData,
-                table: "favorite"
-            }
-        }).then( function(results){
-            console.log(results);
-        })
-    });
-   $(document).on('keypress',function(e) {
-        if(e.which == 13) {
-           $("#submit").click();
-        }
-    });
-
-   $(document).on("click", ".recipe", function(){
-       $("#recipe").click();
-       $("iframe").attr("src",$(this).data("url"));
-   });
-});
-    
-</script>
+<script type="text/javascript" src="js/form.js"></script>
