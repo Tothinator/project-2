@@ -8,46 +8,6 @@ $(function(){
         }
     });
 
-    // $("#submit").on("click", function(e){
-
-    //     // e.preventDefault;
-
-    //     if($("#food").val()==="") {
-    //         return $("#food").focus();
-    //     }
-
-    //     var diet="";
-    //     var health="";
-    //     //var arr = [];
-    //     $("#result").empty();
-       
-    //     if($("[name='health']:checked").length !== 0) {
-    //         $.each($("[name='health']:checked"), function(i, element) {
-    //             health=health+"&health="+element.value;
-    //         });
-    //     }
-
-    //     if($("#diet").val() !== "") {
-    //         diet="&diet=";
-    //         diet=diet+$(":selected").val();
-    //     }
-
-    //     var query = {
-    //         food: $("#food").val().trim(),
-    //         health: health,
-    //         diet: diet
-    //     };
-
-    //     console.log(diet + " " + health);
-        
-    //     // $.ajax("/api/recipe/", {
-    //     //     type:"POST",
-    //     //     data: query
-    //     // }).then(function(result) {
-    //     //     console.log(result);
-    //     // });  
-
-    // });
 });
 
 $("#result").on("click", ".btn-favorite", function() {
