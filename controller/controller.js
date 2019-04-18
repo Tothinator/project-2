@@ -4,6 +4,7 @@ var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 
 var router = express.Router();
+var axios = require("axios");
 //API ROUTES======================================================================================================
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
