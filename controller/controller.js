@@ -64,7 +64,7 @@ router.get("/api/user_data", function(req, res) {
 //HTML ROUTES======================================================================================================
 router.get("/members/favorites", function(req, res) {
     //Checking if session exists for current user.
-    
+
     console.log(req.user);
     if (!req.user) {
         return res.redirect("/");
@@ -98,7 +98,7 @@ router.get("/members/favorites", function(req, res) {
                 recipes.push(recipe);
             }
             console.log(recipes);
-            
+
 
 
             res.render("favorites", {
