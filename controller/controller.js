@@ -6,6 +6,7 @@ var axios = require("axios");
 
 var router = express.Router();
 
+
 var APIID = process.env.APIID || "f9df3797";
 var APIKEY = process.env.RECIPEAPI || "0f26dbad1499ec207c258d835d6eb351";
 
@@ -64,7 +65,7 @@ router.get("/api/user_data", function(req, res) {
 //HTML ROUTES======================================================================================================
 router.get("/members/favorites", function(req, res) {
     //Checking if session exists for current user.
-    
+
     console.log(req.user);
     if (!req.user) {
         return res.redirect("/");
@@ -98,7 +99,7 @@ router.get("/members/favorites", function(req, res) {
                 recipes.push(recipe);
             }
             console.log(recipes);
-            
+
 
 
             res.render("favorites", {
@@ -134,6 +135,7 @@ router.get("/", function(req, res) {
 
 // eslint-disable-next-line no-unused-vars
 router.post("/api/meals", function(req, res) {
+    
     if (!req.user) {
         return res.json({
             status: "not logged in"
@@ -168,13 +170,13 @@ router.post("/api/meals", function(req, res) {
                 UserId: req.user.id,
                 MealId: id
             }).then( function () {
-                res.send("Added meal " + meal.name + 
+                res.send("Added meal " + meal.name +
                 " to user's favorites");
             });
 
         } else if (req.body.table === "day") {
             // add meal to calendar day for current user
-            res.send("Added meal " + meal.get({ plain: true }).name + 
+            res.send("Added meal " + meal.get({ plain: true }).name +
             " to user's specified date");
         } else {
             res.send("Error occured");
@@ -219,7 +221,7 @@ router.post("/form", function(req, res) {
         .then(function(response) {
             var data = response.data.hits;
             var meals=[];
-            
+
             for (var i = 0; i < data.length; i ++){
 
                 var object = {
@@ -253,8 +255,17 @@ router.post("/form", function(req, res) {
             // console.log(error.config);
         });
 });
+router.get("/members/calendar", function(req, res) {
+    console.log("here");
+    if(req.user) {
+        res.render("calendar");
+    } else {
+        res.redirect("/");
+    }
 
-// // Render 404 page for any unmatched routes
+
+});
+//Render 404 page for any unmatched routes
 router.get("*", function(req, res) {
     res.render("404");
 });
