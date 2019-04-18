@@ -34,6 +34,12 @@ router.get("/api/calendar/", function(req, res){
     });
 });
 
+
+router.post("/api/calendar/", function(req, res){
+
+});
+
+
 //Updating receipe to Day model
 router.put("/api/calendar/", function(req, res){
     console.log(req.body);
