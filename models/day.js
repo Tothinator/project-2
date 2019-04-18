@@ -3,12 +3,12 @@ module.exports = function(sequelize, DataTypes) {
     var Day = sequelize.define("Day", {
 
         startDate: {
-            type: DataTypes.DATETIME,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
 
         endDate: {
-            type: DataTypes.DATETIME,
+            type: DataTypes.DATEONLY,
             allowNull: false
         }
     });

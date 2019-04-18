@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+    //Getting scheduled meals from database
     $.get("/api/calendar/").then(function(results){
         console.log(results);
         var eventArray = [];
@@ -15,9 +17,6 @@ $(document).ready(function() {
             eventArray.push(data);
         }
 
-
-        // console.log(eventArray);
-
         var calendar = $("#calendar").fullCalendar({
             editable:true,
             header:{
@@ -32,43 +31,56 @@ $(document).ready(function() {
             eventDrop:function(event)
             {
                 console.log(event);
-                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                var newStart = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+
+                if(event.end){
+                    var newEnd = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                }else{
+                    var newEnd = newStart;
+                }
+                
                 var title = event.title;
                 var id = event.id;
+                var data = {
+                    title:title,
+                    start:newStart, 
+                    end: newEnd, 
+                    id:id
+                };
                 $.ajax({
                     url:"/api/calendar",
                     type:"PUT",
-                    data:{title:title, start:start, end:end, id:id},
-                    success:function()
+                    data: data,
+                    success:function(res)
                     {
+                        console.log(res);
                         calendar.fullCalendar("refetchEvents");
-                        alert("Event Updated");
                     }
                 });
             },
-     
-            eventClick:function(event)
-            {
-                if(confirm("Are you sure you want to remove it?"))
-                {
-                 var id = event.id;
-            //      $.ajax({
-            //       url:"delete.php",
-            //       type:"POST",
-            //       data:{id:id},
-            //       success:function()
-            //       {
-            //        calendar.fullCalendar('refetchEvents');
-            //        alert("Event Removed");
-            //       }
-            // })
-        }
-    }
         
+        });
+
+        $(".delete").on("click", function(e){
+            e.preventDefault();
+            var id = $(this).data("id");
+            console.log(id);
+            $.ajax({
+                url:"/api/calendar",
+                type:"DELETE",
+                data:{id:id},
+                success:function(res)
+                {
+                    console.log(res);
+                    window.location.reload();
+                    // calendar.fullCalendar("refetchEvents");
+    
+                }
+    
+            });
+        });
+
     });
 
 
-
-    
 });

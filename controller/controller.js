@@ -2,7 +2,7 @@ var express = require("express");
 var db = require("../models");
 var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
-var axios = require("axios")
+var axios = require("axios");
 
 
 var router = express.Router();
@@ -24,25 +24,46 @@ router.get("/api/calendar/", function(req, res){
 
     db.Day.findAll({
         attributes: ["id", "startDate", "endDate"],
-        where: {id: req.user.id},
+        where: {UserId: req.user.id},
         include: [{
             model: db.Meal,
             attributes: ["name", "recipeURL"],
         }]
-    }).then(function(results){
-        res.json(results);
+    }).then(function(calendarResults){
+        res.json(calendarResults);
     });
 });
 
 //Updating receipe to Day model
 router.put("/api/calendar/", function(req, res){
+    console.log(req.body);
+    db.Day.update({
+        startDate: req.body.start,
+        endDate: req.body.end
+    }, 
+    { where:
+             {
+                 id: req.body.id
+             }
+    }).then(function(result){
+        console.log(result);
+        res.send("got it");
+    });
     
  
 });
 
 //Deleting receipe from Day model
 router.delete("/api/calendar/", function(req, res){
-    
+    db.Day.destroy({
+        where:
+             {
+                 id: req.body.id
+             }
+    }).then(function(result){
+        console.log(result);
+        res.status(200).send();
+    });
  
 });
 
@@ -93,13 +114,42 @@ router.get("/api/user_data", function(req, res) {
 
 
 //HTML ROUTES======================================================================================================
+
+
 router.get("/members/calendar", function(req, res){
     // console.log(req.user);
     if (!req.user) {
         return res.redirect("/");
     }
 
-    res.render("calendar");
+    db.Day.findAll({
+        attributes: ["id", "startDate", "endDate"],
+        order: ["startDate"],
+        where: {UserId: req.user.id},
+        include: [{
+            model: db.Meal,
+            attributes: ["name", "image", "recipeURL"],
+        }]
+    }).then(function(results){
+        console.log(results);
+        var scheduledMeals = [];
+
+        for(var i = 0; i < results.length; i++){
+
+            var data = {
+                id: results[i].id,
+                start: results[i].startDate,
+                end: results[i].endDate,
+                title: results[i].Meal.name,
+                url: results[i].Meal.recipeURL,
+                image: results[i].Meal.image
+            };
+            scheduledMeals.push(data);
+        }
+
+        res.render("calendar", {scheduledMeal:  scheduledMeals});
+    });
+
 });
 
 
@@ -210,7 +260,7 @@ router.post("/api/meals", function(req, res) {
             }).then( function () {
                 res.send("Added meal " + meal.name +
                 " to user's favorites");
-});
+            });
 
         } else if (req.body.table === "day") {
             // add meal to calendar day for current user
@@ -233,9 +283,9 @@ router.get("/form", function(req, res) {
     // }
 
 
-    res.render("form" /*, {
-        meals: req.meals
-    } */);
+    // res.render("form" /*, {
+    //     meals: req.meals
+    // } */);
 
 });
 
