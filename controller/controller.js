@@ -29,6 +29,17 @@ router.get("/api/calendar/", function(req, res){
     });
 });
 
+//Updating receipe to Day model
+router.put("/api/calendar/", function(req, res){
+    
+ 
+});
+
+//Deleting receipe from Day model
+router.delete("/api/calendar/", function(req, res){
+    
+ 
+});
 
 //logging in route
 router.post("/api/login/", passport.authenticate("local"), function(req, res) {
