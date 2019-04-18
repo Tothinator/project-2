@@ -1,0 +1,47 @@
+<h3 class="bg-dark" id="init">Find Your Recipe</h3>
+<div>
+    <fieldset>
+        <legend>Cuisine</legend>
+        <ul>
+            <li>
+                <label for="food" class="title">Recipe</label>
+                <input type="text" size="40" id="food" required>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>Options</legend>
+        <ul>
+            <li>
+                <label for="diet">Diet:
+                    <select id="diet">
+                        <option value=""></option>
+                        <option value="balanced">balanced</option>
+                        <option value="high protein">high protein</option>
+                        <option value="low-fat">low-fat</option>
+                        <option value="low-carb">low-carb</option>
+                    </select>
+                </label>
+            </li>
+            <li>
+                <label id="health">Health : <br>
+                    <label for="vegan">vegan</label>
+                    <input type="checkbox" id="vegan" name="health" value="vegan">
+                    <label for="vegetarian">vegetarian</label>
+                    <input type="checkbox" id="vegetarian" name="health" value="vegetarian">
+                    <label for="sugar-conscious">sugar-conscious</label>
+                    <input type="checkbox" id="sugar-conscious" name="health" value="sugar-conscious"><br>
+                    <label for="peanut-free">peanut-free</label>
+                    <input type="checkbox" id="peanut-free" name="health" value="peanut-free">
+                    <label for="tree-nut-free">tree-nut-free</label>
+                    <input type="checkbox" id="tree-nut-free" name="health" value="tree-nut-free">
+                    <label for="alcohol-free">alcohol-free</label>
+                    <input type="checkbox" id="alcohol-free" name="health" value="alcohol-free">
+                </label>
+            </li>
+        </ul>
+    </fieldset>
+    <div class="centered">
+        <input type="submit" id ="submit" class="btn btn-primary" value="Let's cook!">
+    </div>
+</div>

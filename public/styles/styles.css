@@ -1,14 +1,23 @@
+/*
+font-family: 'Roboto', sans-serif;
+font-family: 'Mr Dafoe', cursive;
+*/
+
 html {
   height: 100vh;
 }
 
-/* .navbar-dark, .bg-dark {
-  background-color: #3b8686 !important;
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.navbar-dark, .bg-dark {
+  background-color:  #3b8686 !important;
 }
 
 body {
-  background-color: #0b486b;
-  color: #79bd9a;
+  background-color: #58668b ;
+  color: #ebf4f6;
 }
 
 .nav-link:hover {
@@ -16,8 +25,10 @@ body {
 }
 
 .jumbotron {
-  background-color: #3b8686;
-} */
+  background-color: #76b4bd;
+  background-image: url("./images/the-creative-exchange-1480944-unsplash.jpg");
+  background-size: cover;
+}
 
 .nav-link {
   color: #f1fbf9;
@@ -27,10 +38,27 @@ body {
   margin-bottom: 20px;
 }
 
+.app-name {
+  font-family: 'Mr Dafoe', cursive;
+  color: #bdeaee;
+}
+
 .list-group-item {
   line-height: 2.5;
 }
 
 #login-form, #signup-form {
   display: none;
+}
+
+.calendar {
+  margin: 40px;
+  background-color: #FFFFFF;
+  color: black;
+}
+.welcome {
+  background-image: url("./images/katie-smith-104748-unsplash.jpg");
+  height: 100px;
+  width: 100%;
+  background-size: cover;
 }

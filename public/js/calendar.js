@@ -3,22 +3,6 @@ $(document).ready(function() {
         console.log(results);
         var eventArray = [];
 
-        // var data = {
-        //     id: results[0].id,
-        //     title: results[0].Meal.name,
-        //     start: results[0].startDate,
-        //     end: results[0].endDate,
-        //     url: results[0].Meal.recipeURL
-        // };
-
-        // console.log(data);
-        // eventArray.push(data);
-        // eventArray.push({
-        //     title: "Bolognese",
-        //     start: "2019-04-12T10:30:00",
-        //     end: "2019-04-12T12:30:00"
-        // });
-
         for(var i = 0; i < results.length; i++){
 
             var data = {
@@ -69,18 +53,19 @@ $(document).ready(function() {
                 if(confirm("Are you sure you want to remove it?"))
                 {
                  var id = event.id;
-                 $.ajax({
-                  url:"delete.php",
-                  type:"POST",
-                  data:{id:id},
-                  success:function()
-                  {
-                   calendar.fullCalendar('refetchEvents');
-                   alert("Event Removed");
-                  }
-            },
-     
-        });
+            //      $.ajax({
+            //       url:"delete.php",
+            //       type:"POST",
+            //       data:{id:id},
+            //       success:function()
+            //       {
+            //        calendar.fullCalendar('refetchEvents');
+            //        alert("Event Removed");
+            //       }
+            // })
+        }
+    }
+        
     });
 
 
