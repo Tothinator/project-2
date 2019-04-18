@@ -1,6 +1,6 @@
 $(function(){
     $("#accordion").accordion();
-    $("#init").click();
+    //$("#init").click();
 
     $(document).on("keypress",function(e) {
         if(e.which === 13) {
@@ -80,8 +80,13 @@ $("#result").on("click", ".btn-favorite", function() {
     });
 });
 
-
-$(document).on("click", ".recipe", function(){
-    $("#recipe").click();
-    $("iframe").attr("src",$(this).data("url"));
+$(function() {
+    if($(".card-text li").length!==0){
+        $("#click").click();
+    }
 });
+
+// $(document).on("click", ".recipe", function(){
+//     $("#recipe").click();
+//     $("iframe").attr("src",$(this).data("url"));
+// });
