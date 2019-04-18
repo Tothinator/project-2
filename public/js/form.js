@@ -10,7 +10,7 @@ $(function(){
 
     $("#submit").on("click", function(e){
 
-        e.preventDefault;
+        // e.preventDefault;
 
         if($("#food").val()==="") {
             return $("#food").focus();
@@ -37,13 +37,15 @@ $(function(){
             health: health,
             diet: diet
         };
+
+        console.log(diet + " " + health);
         
-        $.ajax("/api/recipe/", {
-            type:"POST",
-            data: query
-        }).then(function(result) {
-            console.log(result);
-        });  
+        // $.ajax("/api/recipe/", {
+        //     type:"POST",
+        //     data: query
+        // }).then(function(result) {
+        //     console.log(result);
+        // });  
 
     });
 });
@@ -53,13 +55,15 @@ $("#result").on("click", ".btn-favorite", function() {
     var mealData = {
         name: $(this).data("title"),
         image: $(this).data("image"),
-        servings: $(this).data("yield"),
-        dietLabels: JSON.stringify($(this).data("dietLabels")),
-        healthLabels: JSON.stringify($(this).data("healthLabels")),
-        ingredients: JSON.stringify($(this).data("ingredientLines")),
+        servings: $(this).data("servings"),
+        dietLabels: $(this).data("diet"),
+        healthLabels: $(this).data("health"),
+        ingredients: $(this).data("ingredients"),
         calories: $(this).data("calories"),
-        time: $(this).data("totalTime"),
+        time: $(this).data("time"),
     };
+
+    console.log(mealData);
 
     $.ajax("/api/meals", {
         method: "POST",
@@ -70,6 +74,9 @@ $("#result").on("click", ".btn-favorite", function() {
         }
     }).then( function(results){
         console.log(results);
+        if(results.status === "not logged in") {
+            window.location.replace("/");
+        }
     });
 });
 
