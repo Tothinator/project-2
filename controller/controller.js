@@ -3,6 +3,7 @@ var db = require("../models");
 var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 
+
 var router = express.Router();
 //API ROUTES======================================================================================================
 
@@ -12,20 +13,24 @@ router.get("/api/calendar/", function(req, res){
         return res.redirect("/");
     }
 
-    db.User.findAll({
+    db.Day.findAll({
+        attributes: ["id", "startDate", "endDate"],
         where: {id: req.user.id},
         include: [{
             model: db.Meal,
             attributes: ["name", "recipeURL"],
-            through: {
-                model: db.Day,
-                attributes: ["date", "id"]
-            }
         }]
     }).then(function(results){
-        var data = results[0];
-        console.log(data);
-        res.json(data);
+        // console.log(results[0].dataValues);
+        // var data = {
+        //     id: results[0].dataValues.id,
+        //     startDate: results[0].dataValues.startDate,
+        //     endDate: results[0].dataValues.endDate,
+        //     title: results[0].dataValues.Meal.name,
+        //     url: results[0].dataValues.Meal.recipeURL
+        // };
+        // console.log(data);
+        res.json(results);
     });
 });
 
@@ -48,8 +53,8 @@ router.post("/api/login/", passport.authenticate("local"), function(req, res) {
 
 //signing up account route
 router.post("/api/signup", function(req, res) {
-    console.log(req.body.username);
-    console.log(req.body.password);
+    // console.log(req.body.username);
+    // console.log(req.body.password);
     db.User.create({
         username: req.body.username,
         password: req.body.password
@@ -89,7 +94,7 @@ router.get("/api/user_data", function(req, res) {
 
 //HTML ROUTES======================================================================================================
 router.get("/members/calendar", function(req, res){
-    console.log(req.user);
+    // console.log(req.user);
     if (!req.user) {
         return res.redirect("/");
     }

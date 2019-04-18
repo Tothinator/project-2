@@ -1,13 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
     
     var Day = sequelize.define("Day", {
-        id:{
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
-
-        },
 
         startDate: {
             type: DataTypes.DATEONLY,
@@ -20,14 +13,11 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    Day.associate = function(models) {
-        // Associating Users with Meals through Junction Tables Faves and Days
-
-        models.Day.belongsTo(models.Meal);
+    Day.associate = function(models){
         models.Day.belongsTo(models.User);
+        models.Day.belongsTo(models.Meal);
+    }
 
-
-    };
 
     return Day;
 };
