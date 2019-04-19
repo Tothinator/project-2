@@ -65,6 +65,8 @@ $("#result").on("click", ".btn-favorite", function() {
 
     console.log(mealData);
 
+    var favBtn = $(this);
+
     $.ajax("/api/meals", {
         method: "POST",
         data: {
@@ -72,11 +74,14 @@ $("#result").on("click", ".btn-favorite", function() {
             data: mealData,
             table: "favorite"
         }
-    }).then( function(results){
+    }).then(function(results){
         console.log(results);
         if(results.status === "not logged in") {
             window.location.replace("/");
+        } else {
+            favBtn.toggleClass("fas far");
         }
+
     });
 });
 
