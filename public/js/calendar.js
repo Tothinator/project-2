@@ -13,8 +13,7 @@ $(document).ready(function() {
 
             var data = {
                 id: results[i].id,
-                start: results[i].startDate,
-                end: results[i].endDate,
+                date: results[i].date,
                 title: results[i].Meal.name,
                 url: results[i].Meal.recipeURL
             };
@@ -37,19 +36,18 @@ $(document).ready(function() {
         
                 var newStart = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 
-                if(event.end){
-                    var newEnd = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-                }else{
-                    var newEnd = newStart;
-                }
+                // if(event.end){
+                //     var newEnd = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                // }else{
+                //     var newEnd = newStart;
+                // }
                 
                 var title = event.title;
                 var id = event.id;
 
                 var data = {
                     title:title,
-                    start:newStart, 
-                    end: newEnd, 
+                    date: newStart, 
                     id:id
                 };
                 $.ajax({

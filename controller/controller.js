@@ -24,7 +24,7 @@ router.get("/api/calendar/", function(req, res){
     }
 
     db.Day.findAll({
-        attributes: ["id", "startDate", "endDate"],
+        attributes: ["id", "date"],
         where: {UserId: req.user.id},
         include: [{
             model: db.Meal,
@@ -56,16 +56,16 @@ router.post("/api/calendar/", function(req, res){
             var meal = result[0].dataValues;
             
             db.Day.findOrCreate({
-                where: {startDate: req.body.date,
+                where: {date: req.body.date,
                         MealId: meal.id},
                 defaults: {
-                startDate: req.body.date,
-                endDate: req.body.date,
+                date: req.body.date,
                 MealId: meal.id,
                 UserId: req.user.id
                 }
             }).then(function(result){
                 console.log(result);
+                res.send("meal has been scheduled")
             });
         });
 });
@@ -74,8 +74,7 @@ router.post("/api/calendar/", function(req, res){
 router.put("/api/calendar/", function(req, res){
     console.log(req.body);
     db.Day.update({
-        startDate: req.body.start,
-        endDate: req.body.end
+        date: date,
     }, 
     { where:
              {
@@ -181,11 +180,11 @@ router.get("/members/calendar", function(req, res){
 
 
     db.Day.findAll({
-        attributes: ["id", "startDate", "endDate", "MealId"],
-        order: ["startDate"],
+        attributes: ["id", "date", "MealId"],
+        order: ["date"],
         where: {
             UserId: req.user.id,
-            startDate: { 
+            date: { 
                 $between: [formatToday, nextWeek]
             }
         },
@@ -202,8 +201,7 @@ router.get("/members/calendar", function(req, res){
             var data = {
                 id: results[i].id,
                 MealId: results[i].MealId,
-                start: results[i].startDate,
-                end: results[i].endDate,
+                date: results[i].date,
                 title: results[i].Meal.name,
                 url: results[i].Meal.recipeURL,
                 image: results[i].Meal.image

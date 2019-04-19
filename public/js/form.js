@@ -43,6 +43,7 @@ $("#result").on("click", "#scheduleSubmit", function(event){
     console.log(mealData.date);
     
     $.post("/api/calendar/", mealData)
+
         .then(function(res){
             console.log(res);
             alert("Your recipe has been scheduled.");
