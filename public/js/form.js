@@ -56,12 +56,20 @@ $(function() {
     $(".card-text").hide();
 
     $(window).resize(function(){
+        if($(".card").hasClass("open")) {
+            $(".card").removeClass("open");
+        }
+        if($(".card").hasClass("animated")) {
+            $(".card").removeClass("animated");
+        }
+        $(".card-text").hide();
         $(".card").height($(".card img").height()+$(".card-title").height()+80+"px");
         $("#result").height(($(".card").height()+30)*spaceNumber+"px");
     });
 
     $(document).on("click", ".card", function(){
         if(!$(this).hasClass("open")&&!$(this).hasClass("animated")) {
+            console.log("여기");
             $(this).addClass("open");
             $(this).children(".card-body").children(".card-text").show();
             var addHeight=$(".card-body").height();
@@ -75,6 +83,7 @@ $(function() {
                 $(this).addClass("animated");
             });
         } else if($(this).hasClass("open")&&$(this).hasClass("animated")) {
+            console.log("여기2");
             $(this).removeClass("open");
             $(this).children(".card-body").children(".card-text").hide();
             var addHeight=$(".card-body").children().not(".card-title").height();
