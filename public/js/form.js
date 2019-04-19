@@ -54,6 +54,7 @@ $("#result").on("click", "#scheduleSubmit", function(event){
 
 $("#result").on("click", ".btn-favorite", function() {
 
+    var url = $(this).data("url");
     var mealData = {
         name: $(this).data("title"),
         image: $(this).data("image"),
@@ -71,17 +72,20 @@ $("#result").on("click", ".btn-favorite", function() {
     $.ajax("/api/meals", {
         method: "POST",
         data: {
-            url: $(this).data("url"),
+            url: url,
             data: mealData,
             table: "favorite"
         }
     }).then(function(results){
         console.log(results);
         if(results.status === "not logged in") {
-            window.location.replace("/");
+            localStorage.clear();
+            localStorage.setItem(url, JSON.stringify(mealData));
+            $("#loginModal").modal("show");
         }
         favBtn.children("i").toggleClass("fas far");
     });
+
 });
 
 $(function() {
