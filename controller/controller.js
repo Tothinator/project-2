@@ -198,7 +198,7 @@ router.post("/form", function(req, res) {
 
     console.log(req.body);
 
-    if (req.body.food === "" && req.body.diet === "" && req.body.health === undefined) {
+    if (req.body.food === "") {
         console.log("Nothing here");
         return res.render("form", {
             user: req.user,
@@ -206,70 +206,70 @@ router.post("/form", function(req, res) {
         });
     }
     
-    // var health = "";
-    // var diet = "&diet=";
-    // var food = "&q=";
+    var health = "";
+    var diet = "";
+    var food = "";
 
-    // if (req.body.food !== "") {
-    //     food =+ req.body.food;
-    // }
+    if (req.body.food !== "") {
+        food = "&q=" + req.body.food;
+    }
 
-    // if (req.body.diet !== "") {
-    //     diet =+ req.body.diet;
-    // }
+    if (req.body.diet !== "" && req.body.diet !== undefined) {
+        diet = "&diet=" + req.body.diet;
+    }
 
-    // if (req.body.health !== undefined) {
-    //     if(req.body.health.length !== 0 && typeof req.body.health === "array") {
-    //         req.body.health.forEach(function(i) {
-    //             health=health+"&health="+i;
-    //         });
-    //     } else if (req.body.health !== "") {
-    //         health = "&health=" + req.body.health;
-    //     }
-    // }
+    if (req.body.health !== undefined) {
+        if(req.body.health.length !== 0 && typeof req.body.health === "array") {
+            req.body.health.forEach(function(i) {
+                health=health+"&health="+i;
+            });
+        } else if (req.body.health !== "") {
+            health = "&health=" + req.body.health;
+        }
+    }
 
-    // console.log(APIURL + req.body.food + health + diet);
+    console.log(APIURL + food + health + diet);
 
-    // axios.get(APIURL + req.body.food + health + diet)
-    //     .then(function(response) {
-    //         var data = response.data.hits;
-    //         var meals=[];
+    axios.get(APIURL + food + health + diet)
+        .then(function(response) {
+            var data = response.data.hits;
+            var meals=[];
 
-    //         for (var i = 0; i < data.length; i ++){
+            for (var i = 0; i < data.length; i ++){
 
-    //             var object = {
-    //                 "image": data[i].recipe.image,
-    //                 "label": data[i].recipe.label,
-    //                 "url": data[i].recipe.url,
-    //                 "yield": data[i].recipe.yield,
-    //                 "dietLabels": data[i].recipe.dietLabels,
-    //                 "healthLabels": data[i].recipe.healthLabels,
-    //                 "ingredientLines": data[i].recipe.ingredientLines,
-    //                 "calories": data[i].recipe.calories,
-    //                 "totalTime": data[i].recipe.totalTime
-    //             };
-    //             meals.push(object);
-    //         }
+                var object = {
+                    "image": data[i].recipe.image,
+                    "label": data[i].recipe.label,
+                    "url": data[i].recipe.url,
+                    "yield": data[i].recipe.yield,
+                    "dietLabels": data[i].recipe.dietLabels,
+                    "healthLabels": data[i].recipe.healthLabels,
+                    "ingredientLines": data[i].recipe.ingredientLines,
+                    "calories": data[i].recipe.calories,
+                    "totalTime": data[i].recipe.totalTime
+                };
+                meals.push(object);
+            }
 
-    //         // console.log(meals); 
+            // console.log(meals); 
 
-    //         res.render("form", {
-    //             user: req.user,
-    //             meals: meals
-    //         });
+            res.render("form", {
+                user: req.user,
+                meals: meals
+            });
 
-    //     }).catch(function(error) {
-    //         if (error.response) {
-    //             // console.log(error.response.data);
-    //             console.log(error.response.status);
-    //             // console.log(error.response.headers);
-    //         } else if (error.request) {
-    //             console.log(error.request);
-    //         } else {
-    //             console.log("Error", error.message);
-    //         }
-    //         // console.log(error.config);
-    //     });
+        }).catch(function(error) {
+            if (error.response) {
+                // console.log(error.response.data);
+                console.log(error.response.status);
+                // console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error", error.message);
+            }
+            // console.log(error.config);
+        });
 });
 
 router.get("/members/calendar", function(req, res) {

@@ -1,13 +1,8 @@
 <div style="position: relative" id="accordion">
-
-    {{#if msg}}
-        {{> toasts/toast}}
-    {{/if}}
-
     <h3 class="bg-dark" id="init">Find Your Recipe</h3>
     {{> search }}
     <h3 class="result-header" id="click">Result</h3>
-    <div id="result">
+    <div class="card-columns" id="result">
         {{#if meals}}
             {{#each meals}}
                 {{> recipe }}
