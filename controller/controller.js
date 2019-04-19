@@ -115,7 +115,8 @@ router.post("/api/favorites/", function(req, res){
             UserId: req.user.id
         }
 
-    }).then(function(result){
+    }).then(function(){
+
         res.redirect("/members/calendar");
     });
 });
