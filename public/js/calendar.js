@@ -1,81 +1,108 @@
-$(document).ready(function() {
-    $.get("/calendar").then(function(){
 
-        $("#calendar").fullCalendar({
-            header: {
-                left: "prev,next today",
-                center: "title",
-                right: "month,basicWeek,basicDay"
+
+
+$(document).ready(function() {
+  
+    
+    //Getting scheduled meals from database
+    $.get("/api/calendar/").then(function(results){
+        console.log(results);
+        var eventArray = [];
+
+        for(var i = 0; i < results.length; i++){
+
+            var data = {
+                id: results[i].id,
+                date: results[i].date,
+                title: results[i].Meal.name,
+                url: results[i].Meal.recipeURL
+            };
+            eventArray.push(data);
+        }
+
+        var calendar = $("#calendar").fullCalendar({
+            editable:true,
+            header:{
+                left:"prev, next today",
+                center:"title",
+                right:"month,agendaWeek,agendaDay"
             },
-            defaultDate: "2019-04-18",
-            navLinks: true, // can click day/week names to navigate views
-            editable: true,
-            eventLimit: true, // allow "more" link when too many events
-            events: [
-                {
-                    title: "Spaghetti",
-                    start: "2019-04-01",
-                    backgroundColor:"red"
-                },
-                {
-                    title: "Pasta",
-                    start: "2019-04-07",
-                    end: "2019-04-10",
-                    backgroundColor:"green"
-                },
-                {
-                    id: 999,
-                    title: "Pizza",
-                    start: "2019-04-09T16:00:00"
-                },
-                {
-                    id: 999,
-                    title: "Macaroni",
-                    start: "2019-04-16T16:00:00"
-                },
-                {
-                    title: "Roast Beef",
-                    start: "2019-04-11",
-                    end: "2019-04-13"
-                },
-                {
-                    title: "Bolognese",
-                    start: "2019-04-12T10:30:00",
-                    end: "2019-04-12T12:30:00"
-                },
-                {
-                    title: "Panini",
-                    start: "2019-04-12T12:00:00"
-                },
-                {
-                    title: "Pizza",
-                    start: "2019-04-12T14:30:00"
-                },
-                {
-                    title: "Roasted Chicken",
-                    start: "2019-04-12T17:30:00"
-                },
-                {
-                    title: "Bagels",
-                    start: "2019-04-12T20:00:00"
-                },
-                {
-                    title: "Chips",
-                    start: "2019-04-18T07:00:00"
-                },
-                {
-                    title: "Click for Bon Apetit",
-                    url: "http://www.bonappetit.com/",
-                    start: "2019-04-28"
-                }
-            ],
-            eventClick: function(calEvent) {
-                swal({
-                    title: calEvent.title,
-                    icon: "success",
+            events: eventArray,
+            selectable:true,
+            selectHelper:true,
+            editable:true,
+            eventDrop:function(event)
+            {
+        
+                var newStart = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+
+                // if(event.end){
+                //     var newEnd = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                // }else{
+                //     var newEnd = newStart;
+                // }
+                console.log(newStart);
+                var title = event.title;
+                var id = event.id;
+
+                var data = {
+                    title:title,
+                    date: newStart, 
+                    id:id
+                };
+                $.ajax({
+                    url:"/api/calendar",
+                    type:"PUT",
+                    data: data,
+                    success:function(res)
+                    {
+                        console.log(res);
+                        window.location.reload();
+                        calendar.fullCalendar("refetchEvents");
+                    }
                 });
-            }
+            },
+        
+        });
+
+        $(".delete").on("click", function(e){
+            e.preventDefault();
+            var id = $(this).data("id");
+            console.log(id);
+            $.ajax({
+                url:"/api/calendar",
+                type:"DELETE",
+                data:{id:id},
+                success:function(res)
+                {
+                    console.log(res);
+                    window.location.reload();
+                    
+    
+                }
+    
+            });
+        });
+
+        $(".favorite").on("click", function(e){
+            e.preventDefault();
+            var MealId = $(this).data("mealid");
+            $.ajax({
+                url:"/api/favorites",
+                type:"POST",
+                data:{MealId:MealId},
+                success:function(res)
+                {
+                    console.log(res);
+                    window.location.reload();
+                    
+    
+                }
+    
+            });
         });
 
     });
+
+
 });

@@ -8,8 +8,16 @@
             <button class="btn btn-primary btn-favorite" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
                 data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
                 data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
-                Favorite
+                <i class="far fa-heart"></i>
             </button>
+            <button class="btn btn-primary"  id = "schedule">Schedule</button>
+            <form method="POST" action="/api/calendar/" hidden>
+                <label for="date">When would you like to make this receipe?</label>
+                <input class="form-control date" type="date">
+                <input class="btn btn-primary scheduleSubmit" type="submit"data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
+                data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
+                data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
+         </form>
         </div>
     </div>
     <div class="infoCard">
@@ -29,3 +37,17 @@
         </ul>
     </div>
 </div>
+
+
+<script>
+
+
+
+</script>
+
+{{!-- 
+empty heart:
+<i class="far fa-heart"></i>
+full heart:
+<i class="fas fa-heart"></i> 
+--}}

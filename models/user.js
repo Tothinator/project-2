@@ -17,7 +17,8 @@ module.exports = function(sequelize, DataTypes) {
         // Associating Users with Meals through Junction Tables Faves and Days
         models.User.belongsToMany(models.Meal, {through: models.Favorite} );
 
-        models.User.belongsToMany(models.Meal, {through: models.Day} );
+        // models.User.belongsToMany(models.Meal, {through: models.Day} );
+        models.User.hasMany(models.Day);
     };
 
     User.prototype.validPassword = function(password) {
