@@ -51,7 +51,7 @@ a:hover {
   line-height: 2.5;
 }
 
-#login-form, #signup-form {
+#signup-form {
   display: none;
 }
 
@@ -65,4 +65,8 @@ a:hover {
   height: 100px;
   width: 100%;
   background-size: cover;
+}
+
+#brand-animation {
+  max-width: 100%;
 }
