@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         ingredients: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         calories: {
@@ -37,7 +37,8 @@ module.exports = function(sequelize, DataTypes) {
         // Associating Meal with Users through Junction Tables Faves and Days
         models.Meal.belongsToMany(models.User, {through: models.Favorite} );
 
-        models.Meal.belongsToMany(models.User, {through: models.Day} );
+        // models.Meal.belongsToMany(models.User, {through: models.Day} );
+        models.Meal.hasMany(models.Day);
 
     };
 
