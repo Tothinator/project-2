@@ -73,8 +73,9 @@ router.post("/api/calendar/", function(req, res){
 //Updating receipe to Day model
 router.put("/api/calendar/", function(req, res){
     console.log(req.body);
+
     db.Day.update({
-        date: date,
+        date: req.body.date,
     }, 
     { where:
              {
@@ -197,17 +198,21 @@ router.get("/members/calendar", function(req, res){
         var scheduledMeals = [];
 
         for(var i = 0; i < results.length; i++){
+            
+            var formatDate = moment(results[i].date).format("dddd")
+
 
             var data = {
                 id: results[i].id,
                 MealId: results[i].MealId,
-                date: results[i].date,
+                date: formatDate,
                 title: results[i].Meal.name,
                 url: results[i].Meal.recipeURL,
                 image: results[i].Meal.image
             };
             scheduledMeals.push(data);
         }
+        console.log(scheduledMeals)
 
         res.render("calendar", {scheduledMeal:  scheduledMeals});
     });

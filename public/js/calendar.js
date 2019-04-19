@@ -41,7 +41,7 @@ $(document).ready(function() {
                 // }else{
                 //     var newEnd = newStart;
                 // }
-                
+                console.log(newStart);
                 var title = event.title;
                 var id = event.id;
 
