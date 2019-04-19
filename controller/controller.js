@@ -16,6 +16,25 @@ var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + API
 
 //API ROUTES======================================================================================================
 
+router.post("/api/favorites/", function(req, res){
+    if (!req.user) {
+        return res.redirect("/");
+    }
+
+    console.log(req.body)
+    db.Favorite.findOrCreate({
+        where: {MealId: req.body.MealId},
+        defaults: {MealId: req.body.MealId,
+            UserId: req.user.id
+        }
+
+    }).then(function(result){
+        res.redirect("/members/calendar");
+    });
+});
+
+
+
 //Getting calendar data from Day Table
 router.get("/api/calendar/", function(req, res){
     if (!req.user) {
@@ -71,7 +90,6 @@ router.post("/api/calendar/", function(req, res){
         });
 });
 
-
 //Updating receipe to Day model
 router.put("/api/calendar/", function(req, res){
     console.log(req.body);
@@ -87,8 +105,6 @@ router.put("/api/calendar/", function(req, res){
         console.log(result);
         res.send("got it");
     });
-    
- 
 });
 
 //Deleting receipe from Day model
@@ -153,7 +169,7 @@ router.get("/api/user_data", function(req, res) {
 
 //HTML ROUTES======================================================================================================
 
-
+//Route to populate the scheuduled meal cards
 router.get("/members/calendar", function(req, res){
     // console.log(req.user);
     if (!req.user) {
@@ -161,7 +177,7 @@ router.get("/members/calendar", function(req, res){
     }
 
     db.Day.findAll({
-        attributes: ["id", "startDate", "endDate"],
+        attributes: ["id", "startDate", "endDate", "MealId"],
         order: ["startDate"],
         where: {UserId: req.user.id},
         include: [{
@@ -176,6 +192,7 @@ router.get("/members/calendar", function(req, res){
 
             var data = {
                 id: results[i].id,
+                MealId: results[i].MealId,
                 start: results[i].startDate,
                 end: results[i].endDate,
                 title: results[i].Meal.name,
@@ -312,16 +329,10 @@ router.post("/api/meals", function(req, res) {
 
 router.get("/form", function(req, res) {
 
-<<<<<<< HEAD
- 
-    res.render("form");
-    
-=======
     res.render("form", {
         user: req.user
     });
 
->>>>>>> 6459ea61d9f48d2ad6e3663bd27647775aefeec4
 });
 
 router.post("/form", function(req, res) {
@@ -401,18 +412,6 @@ router.post("/form", function(req, res) {
             // console.log(error.config);
         });
 });
-<<<<<<< HEAD
-=======
-
-router.get("/members/calendar", function(req, res) {
-    console.log("here");
-    if(req.user) {
-        res.render("calendar", {user: req.user});
-    } else {
-        res.redirect("/");
-    }
-
->>>>>>> 6459ea61d9f48d2ad6e3663bd27647775aefeec4
 
 // // Render 404 page for any unmatched routes
 router.get("*", function(req, res) {

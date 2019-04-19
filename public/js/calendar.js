@@ -80,6 +80,24 @@ $(document).ready(function() {
             });
         });
 
+        $(".favorite").on("click", function(e){
+            e.preventDefault();
+            var MealId = $(this).data("mealid");
+            $.ajax({
+                url:"/api/favorites",
+                type:"POST",
+                data:{MealId:MealId},
+                success:function(res)
+                {
+                    console.log(res);
+                    window.location.reload();
+                    // calendar.fullCalendar("refetchEvents");
+    
+                }
+    
+            });
+        });
+
     });
 
 
