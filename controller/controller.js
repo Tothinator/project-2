@@ -98,7 +98,7 @@ router.get("/members/favorites", function(req, res) {
 
                 recipes.push(recipe);
             }
-            console.log(recipes);
+            // console.log(recipes);
 
 
 
@@ -145,7 +145,7 @@ router.post("/api/meals", function(req, res) {
 
     // console.log(req.body);
     // console.log(req.body.url);
-    console.log(data);
+    // console.log(data);
 
 
     db.Meal.findOrCreate({
@@ -158,7 +158,7 @@ router.post("/api/meals", function(req, res) {
 
         var meal = result[0].dataValues;
 
-        console.log(result[0].dataValues);
+        // console.log(result[0].dataValues);
 
         var id = meal.id;
 
@@ -171,12 +171,29 @@ router.post("/api/meals", function(req, res) {
             // if we find something, we need to delete it
             // otherwise, create it (like below)
 
-            db.Favorite.create({
-                UserId: req.user.id,
-                MealId: id
-            }).then( function () {
-                res.send("Added meal " + meal.name +
-                " to user's favorites");
+            db.Favorite.findOrCreate({
+                where: {
+                    UserId: req.user.id,
+                    MealId: id
+                }
+            }).then( function (result) {
+                console.log("favorite created: " + result[0]._options.isNewRecord);
+                
+                if (result[0]._options.isNewRecord) {
+                    res.send("Added meal " + meal.name +
+                    " to user's favorites");
+                } else {
+                    db.Favorite.destroy({
+                        where: {
+                            UserId: req.user.id,
+                            MealId: id
+                        }
+                    }).then( function() {
+                        res.send("Deleted meal " + meal.name + 
+                        " from user's favorites");
+                    });
+                }
+
             });
 
         } else if (req.body.table === "day") {
@@ -239,38 +256,58 @@ router.post("/form", function(req, res) {
         .then(function(response) {
             var data = response.data.hits;
             var meals=[];
-            console.log(data[0]);
+            // console.log(data[0]);
 
             // TODO
             // make a database query to get all the user's favorites
 
-            for (var i = 0; i < data.length; i ++){
-
-                var object = {
-                    "image": data[i].recipe.image,
-                    "label": data[i].recipe.label,
-                    "url": data[i].recipe.url,
-                    "yield": data[i].recipe.yield,
-                    "dietLabels": data[i].recipe.dietLabels,
-                    "healthLabels": data[i].recipe.healthLabels,
-                    "ingredientLines": data[i].recipe.ingredientLines,
-                    "calories": data[i].recipe.calories,
-                    "totalTime": data[i].recipe.totalTime
-                    // "favorited": false
-                };
-
-                // TODO
-                // check to see if the meal is already a favorited meal
-                    // if it is, object.favorited = true;
+            db.Favorite.findAll({
+                where: {
+                    UserId: req.user.id,
+                },
+                include: [{
+                    model: db.Meal,
+                    attributes: ["recipeURL"]
+                }]
+            }).then(function (result) {
                 
-                meals.push(object);
-            }
+                // console.log(result[0].Meal.recipeURL);
+                
+                for (var i = 0; i < data.length; i ++){
+                    
+                    var object = {
+                        "image": data[i].recipe.image,
+                        "label": data[i].recipe.label,
+                        "url": data[i].recipe.url,
+                        "yield": data[i].recipe.yield,
+                        "dietLabels": data[i].recipe.dietLabels,
+                        "healthLabels": data[i].recipe.healthLabels,
+                        "ingredientLines": data[i].recipe.ingredientLines,
+                        "calories": data[i].recipe.calories,
+                        "totalTime": data[i].recipe.totalTime,
+                        "favorited": false
+                    };
 
-            // console.log(meals); 
+                    // TODO
+                    // check to see if the meal is already a favorited meal
+                        // if it is, object.favorited = true;
+                    for (var j = 0; j < result.length; j++){
+                        if (object.url === result[j].Meal.recipeURL) {
+                            object.favorited = true;
+                            break;
+                        }
+                    }
+                    
+                    meals.push(object);
+                }
 
-            res.render("form", {
-                user: req.user,
-                meals: meals
+                // console.log(meals); 
+
+                res.render("form", {
+                    user: req.user,
+                    meals: meals
+                });
+
             });
 
         }).catch(function(error) {
@@ -288,7 +325,7 @@ router.post("/form", function(req, res) {
 });
 
 router.get("/members/calendar", function(req, res) {
-    console.log("here");
+    console.log("/members/calendar");
     if(req.user) {
         res.render("calendar", {user: req.user});
     } else {
