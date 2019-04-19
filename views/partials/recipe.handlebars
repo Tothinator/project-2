@@ -8,7 +8,11 @@
             <button class="btn btn-primary btn-favorite" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
                 data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
                 data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
-                <i class="far fa-heart"></i>
+                {{#if favorited}}
+                    <i class="fas fa-heart"></i>
+                {{else}}
+                    <i class="far fa-heart"></i>
+                {{/if}}
             </button>
             <button class="btn btn-primary"  id = "schedule">Schedule</button>
             <form method="POST" action="/api/calendar/" hidden>
