@@ -50,6 +50,38 @@ $(function(){
     // });
 });
 
+$("#result").on("click", "#schedule", function(){
+    console.log($(this))
+    if($(this).next("form").prop("hidden")){
+        $(this).next("form").prop("hidden", false);
+    }
+    else{
+        $(this).next("form").prop("hidden", true);
+    }
+});
+
+$("#result").on("click", "#scheduleSubmit", function(){
+    var mealData = {data: {
+        name: $(this).data("title"),
+        image: $(this).data("image"),
+        recipeURL: $(this).data("url"),
+        servings: $(this).data("servings"),
+        dietLabels: $(this).data("diet"),
+        healthLabels: $(this).data("health"),
+        ingredients: $(this).data("ingredients"),
+        calories: $(this).data("calories"),
+        time: $(this).data("time")
+    },
+    date: $("#date").val()
+    };
+    
+    $.post("/api/calendar/", mealData)
+        .then(function(res){
+            console.log(res);
+        });
+});
+
+
 $("#result").on("click", ".btn-favorite", function() {
 
     var mealData = {

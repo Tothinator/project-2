@@ -8,8 +8,8 @@ var axios = require("axios");
 var router = express.Router();
 
 
-var APIID = process.env.APIID || "f9df3797";
-var APIKEY = process.env.RECIPEAPI || "0f26dbad1499ec207c258d835d6eb351";
+var APIID = process.env.APIID || "ac3e460c";
+var APIKEY = process.env.RECIPEAPI || "4a8c99b69bd19aa9ecf68dd209babee8";
 
 var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8&q=";
 
@@ -36,7 +36,39 @@ router.get("/api/calendar/", function(req, res){
 
 
 router.post("/api/calendar/", function(req, res){
+    // if (!req.user) {
+    //     return res.redirect("/");
+    // }
+    
+   
+    var data = req.body.data;
+    console.log(data.recipeURL);
+    console.log(data.name);
+    console.log(data.ingredients);
+    db.Meal.findOrCreate({
+        where: {recipeURL: data.recipeURL},
+        defaults: data
+    })
+        .then(function(result){
+            if (!req.user) {
+                return res.redirect("/");
+            }
+            console.log(req.body.date);
+            var meal = result[0].dataValues;
+            
+            db.Day.create({
+                startDate: req.body.date,
+                endDate: req.body.date,
+                MealId: meal.id,
+                UserId: req.user.id
+            }).then(function(result){
+                console.log(result);
+                res.redirect("/form");
+            });
 
+
+            
+        });
 });
 
 
@@ -237,8 +269,6 @@ router.post("/api/meals", function(req, res) {
     }
     var data = req.body.data;
 
-    // console.log(req.body);
-    // console.log(req.body.url);
     console.log(data);
 
 
@@ -282,17 +312,9 @@ router.post("/api/meals", function(req, res) {
 
 router.get("/form", function(req, res) {
 
-    // if(!req.user) {
-    // return res.redirect("/");
-    // } else {
-    res.render("form" /*, {user: req.user.username} */);
-    // }
-
-
-    // res.render("form" /*, {
-    //     meals: req.meals
-    // } */);
-
+ 
+    res.render("form");
+    
 });
 
 router.post("/form", function(req, res) {
@@ -320,6 +342,7 @@ router.post("/form", function(req, res) {
 
     axios.get(APIURL + req.body.food + health + diet)
         .then(function(response) {
+            console.log(response)
             var data = response.data.hits;
             var meals=[];
 

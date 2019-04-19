@@ -23,5 +23,13 @@
             data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
             Favorite
         </button>
+         <button class="btn btn-primary"  id = "schedule">Schedule</button>
+         <form method="POST" action="/api/calendar/" hidden>
+            <label for="date">When would you like to make this receipe?</label>
+            <input class="form-control" id="date" type="date" value="2019-04-20">
+            <input class="btn btn-primary" type="submit" id="scheduleSubmit" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
+            data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
+            data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
+         </form>
     </div>
 </div>
