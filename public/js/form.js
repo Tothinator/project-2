@@ -35,7 +35,7 @@ $("#result").on("click", ".btn-favorite", function() {
     }).then( function(results){
         console.log(results);
         if(results.status === "not logged in") {
-            window.location.replace("/");
+            $("#loginModal").modal("show");
         }
     });
 });
@@ -45,8 +45,3 @@ $(function() {
         $("#click").click();
     }
 });
-
-// $(document).on("click", ".recipe", function(){
-//     $("#recipe").click();
-//     $("iframe").attr("src",$(this).data("url"));
-// });
