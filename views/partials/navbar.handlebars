@@ -1,0 +1,12 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <h1 class="app-name">Mise en Place</h1>
+        </a>
+        {{#if user}}
+            {{> navbarComponents/userNavbar}}
+        {{else}}
+            {{> navbarComponents/navSearch}}
+        {{/if}}
+    </div>
+</nav>
