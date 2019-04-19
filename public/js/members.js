@@ -8,7 +8,7 @@ $(document).ready(function() {
                 right: "month,basicWeek,basicDay"
             },
             height: 500,
-            defaultView: 'basicWeek',
+            defaultView: "basicWeek",
             defaultDate: "2019-04-18",
             navLinks: true, // can click day/week names to navigate views
             editable: true,
