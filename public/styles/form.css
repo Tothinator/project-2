@@ -54,9 +54,9 @@ h3 {
 .btn-primary {
     margin: 5px;
 }
-.card {
+/* .card {
    margin: 10px;
-}
+} */
 .bold {
     font-weight: bold;
 }
@@ -65,7 +65,36 @@ h3 {
     background-color: #3b8686 !important;
 }
 
+.card {
+    overflow:hidden;
+    height:580px;
+}
+
+.card-title {
+    height:120px;
+    text-align: center;
+}
+
 .card-columns {
     overflow:hidden;
+}
+
+
+.card-body {
+    /* position: absolute;              
+    z-index: 1000;     
+    top:100px;              */
+    /* padding: 50px;
+    background-color: #555; */
+    /* height:1000px; */
+
+}
+
+#accodion {
+    width:100%;
+}
+
+#result {
+    width:100%;
 }
 

@@ -7,10 +7,10 @@ var axios = require("axios");
 var router = express.Router();
 
 
-var APIID = process.env.APIID || "f9df3797";
-var APIKEY = process.env.RECIPEAPI || "0f26dbad1499ec207c258d835d6eb351";
+var APIID = process.env.APIID || "759d6c85";
+var APIKEY = process.env.RECIPEAPI || "8bcc104bffabb9dc869342b0075ab1c6";
 
-var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8&q=";
+var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8";
 
 
 //API ROUTES======================================================================================================
@@ -188,18 +188,35 @@ router.post("/api/meals", function(req, res) {
 
 router.get("/form", function(req, res) {
 
-    res.render("form" /*, {
-        meals: req.meals
-    } */);
+    res.render("form", {
+        user: req.user
+    });
 
 });
 
 router.post("/form", function(req, res) {
 
     console.log(req.body);
-    var health = "";
 
+    if (req.body.food === "") {
+        console.log("Nothing here");
+        return res.render("form", {
+            user: req.user,
+            msg: "Please fill out one of the three fields to search for recipes."
+        });
+    }
+    
+    var health = "";
     var diet = "";
+    var food = "";
+
+    if (req.body.food !== "") {
+        food = "&q=" + req.body.food;
+    }
+
+    if (req.body.diet !== "" && req.body.diet !== undefined) {
+        diet = "&diet=" + req.body.diet;
+    }
 
     if (req.body.health !== undefined) {
         if(req.body.health.length !== 0 && typeof req.body.health === "array") {
@@ -211,13 +228,9 @@ router.post("/form", function(req, res) {
         }
     }
 
-    if (req.body.diet !== "") {
-        diet = "&diet=" + req.body.diet;
-    }
+    console.log(APIURL + food + health + diet);
 
-    console.log(APIURL + req.body.food + health + diet);
-
-    axios.get(APIURL + req.body.food + health + diet)
+    axios.get(APIURL + food + health + diet)
         .then(function(response) {
             var data = response.data.hits;
             var meals=[];
@@ -240,13 +253,16 @@ router.post("/form", function(req, res) {
 
             // console.log(meals); 
 
-            res.render("form", {meals: meals});
+            res.render("form", {
+                user: req.user,
+                meals: meals
+            });
 
         }).catch(function(error) {
             if (error.response) {
                 // console.log(error.response.data);
                 console.log(error.response.status);
-                console.log(error.response.headers);
+                // console.log(error.response.headers);
             } else if (error.request) {
                 console.log(error.request);
             } else {
@@ -255,10 +271,11 @@ router.post("/form", function(req, res) {
             // console.log(error.config);
         });
 });
+
 router.get("/members/calendar", function(req, res) {
     console.log("here");
     if(req.user) {
-        res.render("calendar");
+        res.render("calendar", {user: req.user});
     } else {
         res.redirect("/");
     }

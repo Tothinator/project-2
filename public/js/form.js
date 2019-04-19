@@ -1,6 +1,6 @@
 $(function(){
     $("#accordion").accordion();
-    //$("#init").click();
+    // $("#init").click();
 
     $(document).on("keypress",function(e) {
         if(e.which === 13) {
@@ -8,46 +8,6 @@ $(function(){
         }
     });
 
-    // $("#submit").on("click", function(e){
-
-    //     // e.preventDefault;
-
-    //     if($("#food").val()==="") {
-    //         return $("#food").focus();
-    //     }
-
-    //     var diet="";
-    //     var health="";
-    //     //var arr = [];
-    //     $("#result").empty();
-       
-    //     if($("[name='health']:checked").length !== 0) {
-    //         $.each($("[name='health']:checked"), function(i, element) {
-    //             health=health+"&health="+element.value;
-    //         });
-    //     }
-
-    //     if($("#diet").val() !== "") {
-    //         diet="&diet=";
-    //         diet=diet+$(":selected").val();
-    //     }
-
-    //     var query = {
-    //         food: $("#food").val().trim(),
-    //         health: health,
-    //         diet: diet
-    //     };
-
-    //     console.log(diet + " " + health);
-        
-    //     // $.ajax("/api/recipe/", {
-    //     //     type:"POST",
-    //     //     data: query
-    //     // }).then(function(result) {
-    //     //     console.log(result);
-    //     // });  
-
-    // });
 });
 
 $("#result").on("click", ".btn-favorite", function() {
@@ -80,13 +40,53 @@ $("#result").on("click", ".btn-favorite", function() {
     });
 });
 
+
 $(function() {
+    var numberCard;
+    var spaceNumber;
+    var testArray=[];
+
     if($(".card-text li").length!==0){
+        numberCard=$(".card").length;
+        spaceNumber=parseInt(numberCard/3)+(numberCard%3===0?0:1);
+        //$("#result").height(($(".card").height()+30)*spaceNumber+"px");
         $("#click").click();
     }
-});
 
-// $(document).on("click", ".recipe", function(){
-//     $("#recipe").click();
-//     $("iframe").attr("src",$(this).data("url"));
-// });
+    $(".card-text").hide();
+
+    $(window).resize(function(){
+        $(".card").height($(".card img").height()+$(".card-title").height()+80+"px");
+        $("#result").height(($(".card").height()+30)*spaceNumber+"px");
+    });
+
+    $(document).on("click", ".card", function(){
+        if(!$(this).hasClass("open")&&!$(this).hasClass("animated")) {
+            $(this).addClass("open");
+            $(this).children(".card-body").children(".card-text").show();
+            var addHeight=$(".card-body").height();
+            addHeight=1000;
+            var rowNumber=$(this).children("input").val()%spaceNumber;
+            if(testArray.indexOf(rowNumber)<0) {
+                testArray.push(rowNumber);
+                $("#result").css({"height":"+="+addHeight+"px"});
+            }     
+            $(this).animate({"height":"+="+addHeight+"px"}, 1000,function(){
+                $(this).addClass("animated");
+            });
+        } else if($(this).hasClass("open")&&$(this).hasClass("animated")) {
+            $(this).removeClass("open");
+            $(this).children(".card-body").children(".card-text").hide();
+            var addHeight=$(".card-body").children().not(".card-title").height();
+            addHeight=1000;
+            var rowNumber=$(this).children("input").val()%spaceNumber;
+            if(testArray.indexOf(rowNumber)>=0) {
+                testArray.pop(rowNumber);
+                $("#result").css({"height":"-="+addHeight+"px"});
+            }     
+            $(this).animate({"height":"-="+addHeight+"px"}, 500,function(){
+                $(this).removeClass("animated");
+            });
+        }
+    });
+});
