@@ -414,8 +414,8 @@ router.post("/form", function(req, res) {
 
                 // TODO
                 // check to see if the meal is already a favorited meal
-                    // if it is, object.favorited = true;
-                
+                // if it is, object.favorited = true;
+    
                 meals.push(object);
             }
 
