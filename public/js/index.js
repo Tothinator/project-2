@@ -31,8 +31,12 @@ $loginSubmit.on("click", function(event) {
         data: login
     }).then(function(res) {
         console.log(res);
-        console.log("Redirecting to main page");
-        window.location.replace("/members");
+        if (window.localStorage.length > 0) {
+            addLocal();
+        } else {
+            console.log("Redirecting to main page");
+            window.location.replace("/members");
+        }
     }).catch(function(err){
         alert("Sorry, username or password is incorrect.");
         console.log(err);
@@ -50,7 +54,9 @@ $signupSubmit.on("click", function(event) {
         .trim();
 
     if (pass1 !== pass2) {
-        $("#passwordMatch").text("Your passwords don't match!");
+        $("#confirmPassword").toggleClass("is-invalid");
+        $("#passwordMatch").text("Your passwords don't match!")
+            .toggleClass("invalid-feedback");
     } else {
         console.log($("#passwordLogin").val());
         var signup = {
@@ -69,11 +75,43 @@ $signupSubmit.on("click", function(event) {
             console.log(res);
             if(res.errors){
                 return alert("Usersname has already been taken.");
+            }else if (window.localStorage.length > 0) {
+                addLocal();
+            } else {
+                console.log("Redirecting to main page");
+                window.location.replace("/members");
             }
-         
-            console.log("Redirecting to main page");
-            window.location.replace("/members");
         });
     }
 });
 
+function addLocal() {
+    var url = window.localStorage.key(0);
+    var obj = JSON.parse(window.localStorage.getItem(url));
+    
+    if (obj.date !== undefined) {
+        $.ajax("/api/calendar", {
+            method: "POST",
+            data: obj
+        }).then(function(res) {
+            console.log(res);
+            window.localStorage.clear();
+            window.location.reload();
+        });
+    } else {
+        $.ajax("/api/meals", {
+            method: "POST",
+            data: {
+                url: url,
+                data: obj,
+                table: "favorite"
+            }
+        }).then( function(results){
+            console.log(results);
+            window.localStorage.clear();
+            window.location.reload();
+
+        });
+    }
+
+}
