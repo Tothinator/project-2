@@ -1,6 +1,6 @@
 $(function(){
     $("#accordion").accordion();
-    $("#init").click();
+    // $("#init").click();
 
     $(document).on("keypress",function(e) {
         if(e.which === 13) {
