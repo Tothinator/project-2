@@ -1,9 +1,6 @@
-
-
-
 $(document).ready(function() {
-  
-    
+
+
     //Getting scheduled meals from database
     $.get("/api/calendar/").then(function(results){
         console.log(results);
@@ -33,7 +30,7 @@ $(document).ready(function() {
             editable:true,
             eventDrop:function(event)
             {
-        
+
                 var newStart = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 
                 // if(event.end){
@@ -47,7 +44,7 @@ $(document).ready(function() {
 
                 var data = {
                     title:title,
-                    date: newStart, 
+                    date: newStart,
                     id:id
                 };
                 $.ajax({
@@ -62,7 +59,7 @@ $(document).ready(function() {
                     }
                 });
             },
-        
+
         });
 
         $(".delete").on("click", function(e){
@@ -77,10 +74,10 @@ $(document).ready(function() {
                 {
                     console.log(res);
                     window.location.reload();
-                    
-    
+
+
                 }
-    
+
             });
         });
 
@@ -95,10 +92,10 @@ $(document).ready(function() {
                 {
                     console.log(res);
                     window.location.reload();
-                    
-    
+
+
                 }
-    
+
             });
         });
 
