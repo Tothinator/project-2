@@ -342,7 +342,6 @@ router.post("/form", function(req, res) {
 
     axios.get(APIURL + req.body.food + health + diet)
         .then(function(response) {
-            console.log(response)
             var data = response.data.hits;
             var meals=[];
 
