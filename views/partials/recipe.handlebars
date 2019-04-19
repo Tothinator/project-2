@@ -1,9 +1,33 @@
-<div class="card">
-    <img class="card-img-top" alt="Card Recipe Image" src="{{image}}">
-    <div class="card-body">
-        <h5 class="card-title">{{label}}</h5>
+<div class="position">
+    <div class="card">
+        <input type="hidden" value={{@index}}>
+        <img class="card-img-top" alt="Card Recipe Image" src="{{image}}">
+        <div class="card-body">
+            <h5 class="card-title">{{label}}</h5>
+            <a href={{url}} target="_blank" class="btn btn-primary">Recipe</a>
+            <button class="btn btn-primary btn-favorite" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
+                data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
+                data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
+                {{#if favorited}}
+                    <i class="fas fa-heart"></i>
+                {{else}}
+                    <i class="far fa-heart"></i>
+                {{/if}}
+            </button>
+            <button class="btn btn-primary"  id = "schedule">Schedule</button>
+            <form method="POST" action="/api/calendar/" hidden>
+                <label for="date">When would you like to make this receipe?</label>
+                <input class="form-control date" type="date">
+                <input class="btn btn-primary scheduleSubmit" type="submit"data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
+                data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
+                data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
+         </form>
+        </div>
+    </div>
+    <div class="infoCard">
         <p class="card-text">Servings: {{yield}}</p>
         <p class="card-text">Cooking Time: {{hours}} hours and {{minutes}} minutes</p>
+        <p class="card-text">Calories: {{caloriesPer}}</p>
         <ul class="card-text">Ingredients:
             {{#each ingredientLines}}
             <li> {{this}} </li>
@@ -15,26 +39,6 @@
             <li>{{this}}</li>
             {{/each}}
         </ul>
-        {{!-- Recipe Button doesn't need attributes, the later to add calendar function needs them  --}}
-        {{!-- <button class="btn btn-primary btn-recipe">Recipe</button> --}}
-        <a href={{url}} target="_blank" class="btn btn-primary">Recipe</a>
-        <button class="btn btn-primary btn-favorite" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
-            data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
-            data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
-            {{#if favorited}}
-                <i class="fas fa-heart"></i>
-            {{else}}
-                <i class="far fa-heart"></i>
-            {{/if}}
-        </button>
-         <button class="btn btn-primary"  id = "schedule">Schedule</button>
-         <form method="POST" action="/api/calendar/" hidden>
-            <label for="date">When would you like to make this receipe?</label>
-            <input class="form-control date" type="date">
-            <input class="btn btn-primary scheduleSubmit" type="submit"data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
-            data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
-            data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
-         </form>
     </div>
 </div>
 

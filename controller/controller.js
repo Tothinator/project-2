@@ -416,19 +416,66 @@ router.post("/form", function(req, res) {
             // TODO
             // make a database query to get all the user's favorites
 
-            db.Favorite.findAll({
-                where: {
-                    UserId: req.user.id,
-                },
-                include: [{
-                    model: db.Meal,
-                    attributes: ["recipeURL"]
-                }]
-            }).then(function (result) {
-                
-                // console.log(result[0].Meal.recipeURL);
+            if (req.user) {
+            
+                db.Favorite.findAll({
+                    where: {
+                        UserId: req.user.id,
+                    },
+                    include: [{
+                        model: db.Meal,
+                        attributes: ["recipeURL"]
+                    }]
+                }).then(function (result) {
+                    
+                    // console.log(result[0].Meal.recipeURL);
+                    
+                    for (var i = 0; i < data.length; i ++){
+                        var hours = Math.floor(data[i].recipe.totalTime / 60);
+                        var minutes = data[i].recipe.totalTime % 60;
+                        
+                        var object = {
+                            "image": data[i].recipe.image,
+                            "label": data[i].recipe.label,
+                            "url": data[i].recipe.url,
+                            "yield": data[i].recipe.yield,
+                            "dietLabels": data[i].recipe.dietLabels,
+                            "healthLabels": data[i].recipe.healthLabels,
+                            "ingredientLines": data[i].recipe.ingredientLines,
+                            "calories": data[i].recipe.calories,
+                            "totalTime": data[i].recipe.totalTime,
+                            "favorited": false,
+                            "caloriesPer" : parseInt(data[i].recipe.calories/data[i].recipe.yield),
+                            "minutes": minutes,
+                            "hours": hours
+                        };
+
+                        // TODO
+                        // check to see if the meal is already a favorited meal
+                            // if it is, object.favorited = true;
+                        for (var j = 0; j < result.length; j++){
+                            if (object.url === result[j].Meal.recipeURL) {
+                                object.favorited = true;
+                                break;
+                            }
+                        }
+                        
+                        meals.push(object);
+                    }
+
+                    // console.log(meals); 
+
+                    res.render("form", {
+                        user: req.user,
+                        meals: meals
+                    });
+
+                });
+            } else {
                 
                 for (var i = 0; i < data.length; i ++){
+                    var hours = Math.floor(data[i].recipe.totalTime / 60);
+                    var minutes = data[i].recipe.totalTime % 60;
                     
                     var object = {
                         "image": data[i].recipe.image,
@@ -440,30 +487,20 @@ router.post("/form", function(req, res) {
                         "ingredientLines": data[i].recipe.ingredientLines,
                         "calories": data[i].recipe.calories,
                         "totalTime": data[i].recipe.totalTime,
-                        "favorited": false
+                        "favorited": false,
+                        "caloriesPer" : parseInt(data[i].recipe.calories/data[i].recipe.yield),
+                        "minutes": minutes,
+                        "hours": hours
                     };
 
-                    // TODO
-                    // check to see if the meal is already a favorited meal
-                        // if it is, object.favorited = true;
-                    for (var j = 0; j < result.length; j++){
-                        if (object.url === result[j].Meal.recipeURL) {
-                            object.favorited = true;
-                            break;
-                        }
-                    }
-                    
                     meals.push(object);
                 }
-
-                // console.log(meals); 
-
+                
                 res.render("form", {
                     user: req.user,
                     meals: meals
                 });
-
-            });
+            }
 
         }).catch(function(error) {
             if (error.response) {
@@ -483,5 +520,6 @@ router.post("/form", function(req, res) {
 router.get("*", function(req, res) {
     res.render("404");
 });
+
 
 module.exports = router;
