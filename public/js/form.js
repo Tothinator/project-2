@@ -24,7 +24,7 @@ $("#result").on("click", "#schedule", function(){
     }
 });
 
-$("#result").on("click", "#scheduleSubmit", function(event){
+$("#result").on("click", ".scheduleSubmit", function(event){
     event.preventDefault();
 
     var mealData = {data: {
@@ -40,8 +40,8 @@ $("#result").on("click", "#scheduleSubmit", function(event){
     },
     date: $(this).parents(".card-body").find(".date").val()
     };
-    console.log(mealData.date);
-    
+    console.log(mealData.data.recipeURL);
+
     $.post("/api/calendar/", mealData)
 
         .then(function(res){
