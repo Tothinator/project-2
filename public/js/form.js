@@ -20,11 +20,10 @@ $("#result").on("click", ".btn-favorite", function() {
         healthLabels: $(this).data("health"),
         ingredients: $(this).data("ingredients"),
         calories: $(this).data("calories"),
-        time: $(this).data("time"),
+        time: $(this).data("time")
     };
 
     console.log(mealData);
-
     var favBtn = $(this);
 
     $.ajax("/api/meals", {
@@ -38,10 +37,8 @@ $("#result").on("click", ".btn-favorite", function() {
         console.log(results);
         if(results.status === "not logged in") {
             window.location.replace("/");
-        } else {
-            favBtn.toggleClass("fas far");
         }
-
+        favBtn.children("i").toggleClass("fas far");
     });
 });
 
