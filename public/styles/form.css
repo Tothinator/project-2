@@ -97,4 +97,16 @@ h3 {
 #result {
     width:100%;
 }
+/* */
 
+.position {
+    position: relative;
+    margin:0;
+    padding:0;
+}
+
+.infoCard{
+    position: absolute;
+    margin:0;
+    padding:0;
+}

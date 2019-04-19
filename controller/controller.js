@@ -236,6 +236,8 @@ router.post("/form", function(req, res) {
             var meals=[];
 
             for (var i = 0; i < data.length; i ++){
+                var hours = Math.floor(data[i].recipe.totalTime / 60);
+                var minutes = data[i].recipe.totalTime % 60;
 
                 var object = {
                     "image": data[i].recipe.image,
@@ -246,7 +248,10 @@ router.post("/form", function(req, res) {
                     "healthLabels": data[i].recipe.healthLabels,
                     "ingredientLines": data[i].recipe.ingredientLines,
                     "calories": data[i].recipe.calories,
-                    "totalTime": data[i].recipe.totalTime
+                    "totalTime": data[i].recipe.totalTime,
+                    "caloriesPer" : parseInt(data[i].recipe.calories/data[i].recipe.yield),
+                    "minutes": minutes,
+                    "hours": hours
                 };
                 meals.push(object);
             }

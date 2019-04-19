@@ -43,59 +43,41 @@ $("#result").on("click", ".btn-favorite", function() {
 
 $(function() {
     var numberCard;
-    var spaceNumber;
-    var testArray=[];
+    //var spaceNumber;
+    //var testArray=[];
 
     if($(".card-text li").length!==0){
         numberCard=$(".card").length;
         spaceNumber=parseInt(numberCard/3)+(numberCard%3===0?0:1);
-        //$("#result").height(($(".card").height()+30)*spaceNumber+"px");
         $("#click").click();
     }
 
-    $(".card-text").hide();
+    $(".infoCard").hide();
 
-    $(window).resize(function(){
-        if($(".card").hasClass("open")) {
-            $(".card").removeClass("open");
-        }
-        if($(".card").hasClass("animated")) {
-            $(".card").removeClass("animated");
-        }
-        $(".card-text").hide();
-        $(".card").height($(".card img").height()+$(".card-title").height()+80+"px");
-        $("#result").height(($(".card").height()+30)*spaceNumber+"px");
+    $(document).on("mouseenter", ".card-img-top", function(){
+        var saveElement=$(this).parent().next();
+        if(!$(this).parent().next().hasClass("animated")) {
+            $(this).parent().next().show();
+            $(this).parent().next().not(":animated").animate({
+                top:0,
+                width:$(this).parent().width()+1,
+                "z-index":1000,
+                "background-color":"rgb(48,48,48,0.8)"
+            },600,function(){
+                saveElement.addClass("animated");
+            });
+        } 
     });
 
-    $(document).on("click", ".card", function(){
-        if(!$(this).hasClass("open")&&!$(this).hasClass("animated")) {
-            console.log("여기");
-            $(this).addClass("open");
-            $(this).children(".card-body").children(".card-text").show();
-            var addHeight=$(".card-body").height();
-            addHeight=1000;
-            var rowNumber=$(this).children("input").val()%spaceNumber;
-            if(testArray.indexOf(rowNumber)<0) {
-                testArray.push(rowNumber);
-                $("#result").css({"height":"+="+addHeight+"px"});
-            }     
-            $(this).animate({"height":"+="+addHeight+"px"}, 1000,function(){
-                $(this).addClass("animated");
+    $(document).on("mouseleave", ".infoCard", function(){ 
+        var thisElement=$(this);
+        if($(this).hasClass("animated")) {
+            $(this).hide();
+            $(this).not(":animated").animate({
+                "z-index":10
+            },600,function(){
+                thisElement.removeClass("animated");
             });
-        } else if($(this).hasClass("open")&&$(this).hasClass("animated")) {
-            console.log("여기2");
-            $(this).removeClass("open");
-            $(this).children(".card-body").children(".card-text").hide();
-            var addHeight=$(".card-body").children().not(".card-title").height();
-            addHeight=1000;
-            var rowNumber=$(this).children("input").val()%spaceNumber;
-            if(testArray.indexOf(rowNumber)>=0) {
-                testArray.pop(rowNumber);
-                $("#result").css({"height":"-="+addHeight+"px"});
-            }     
-            $(this).animate({"height":"-="+addHeight+"px"}, 500,function(){
-                $(this).removeClass("animated");
-            });
-        }
+        }  
     });
 });
