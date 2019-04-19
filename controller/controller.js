@@ -44,7 +44,7 @@ router.post("/api/calendar/", function(req, res){
     }
     
     var data = req.body.data;
-    console.log(req.body.date)
+    console.log(req.body.date);
     db.Meal.findOrCreate({
         where: {recipeURL: data.recipeURL},
         defaults: data
@@ -58,15 +58,15 @@ router.post("/api/calendar/", function(req, res){
             
             db.Day.findOrCreate({
                 where: {date: req.body.date,
-                        MealId: meal.id},
+                    MealId: meal.id},
                 defaults: {
-                date: req.body.date,
-                MealId: meal.id,
-                UserId: req.user.id
+                    date: req.body.date,
+                    MealId: meal.id,
+                    UserId: req.user.id
                 }
             }).then(function(result){
                 console.log(result);
-                res.send("meal has been scheduled")
+                res.send("meal has been scheduled");
             });
         });
 });
@@ -108,7 +108,7 @@ router.post("/api/favorites/", function(req, res){
         return res.redirect("/");
     }
 
-    console.log(req.body)
+    console.log(req.body);
     db.Favorite.findOrCreate({
         where: {MealId: req.body.MealId},
         defaults: {MealId: req.body.MealId,
@@ -174,7 +174,7 @@ router.get("/members/calendar", function(req, res){
         return res.redirect("/");
     }
 
-    var today = new Date()
+    var today = new Date();
     var formatToday = moment(today).toDate();
     var nextWeek = moment(formatToday).add(7, "days").toDate();
 
@@ -199,7 +199,7 @@ router.get("/members/calendar", function(req, res){
 
         for(var i = 0; i < results.length; i++){
             
-            var formatDate = moment(results[i].date).format("dddd")
+            var formatDate = moment(results[i].date).format("dddd");
 
 
             var data = {
@@ -212,7 +212,7 @@ router.get("/members/calendar", function(req, res){
             };
             scheduledMeals.push(data);
         }
-        console.log(scheduledMeals)
+        console.log(scheduledMeals);
 
         res.render("calendar", {scheduledMeal:  scheduledMeals});
     });
