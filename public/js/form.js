@@ -1,4 +1,6 @@
+
 $(function(){
+
     $("#accordion").accordion();
     // $("#init").click();
 
@@ -11,16 +13,20 @@ $(function(){
 });
 
 $("#result").on("click", "#schedule", function(){
-    console.log($(this))
     if($(this).next("form").prop("hidden")){
+
         $(this).next("form").prop("hidden", false);
+        var date = new Date().toISOString().substr(0, 10);
+        $("input[type=date]").val(date);
     }
     else{
         $(this).next("form").prop("hidden", true);
     }
 });
 
-$("#result").on("click", "#scheduleSubmit", function(){
+$("#result").on("click", "#scheduleSubmit", function(event){
+    event.preventDefault();
+
     var mealData = {data: {
         name: $(this).data("title"),
         image: $(this).data("image"),
@@ -32,12 +38,15 @@ $("#result").on("click", "#scheduleSubmit", function(){
         calories: $(this).data("calories"),
         time: $(this).data("time")
     },
-    date: $("#date").val()
+    date: $(this).parents(".card-body").find(".date").val()
     };
+    console.log(mealData.date);
     
     $.post("/api/calendar/", mealData)
         .then(function(res){
             console.log(res);
+            alert("Your recipe has been scheduled.");
+
         });
 });
 
@@ -77,8 +86,3 @@ $(function() {
         $("#click").click();
     }
 });
-
-// $(document).on("click", ".recipe", function(){
-//     $("#recipe").click();
-//     $("iframe").attr("src",$(this).data("url"));
-// });

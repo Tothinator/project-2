@@ -1,5 +1,9 @@
-$(document).ready(function() {
 
+
+
+$(document).ready(function() {
+  
+    
     //Getting scheduled meals from database
     $.get("/api/calendar/").then(function(results){
         console.log(results);
@@ -30,7 +34,7 @@ $(document).ready(function() {
             editable:true,
             eventDrop:function(event)
             {
-                console.log(event);
+        
                 var newStart = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 
                 if(event.end){
@@ -41,6 +45,7 @@ $(document).ready(function() {
                 
                 var title = event.title;
                 var id = event.id;
+
                 var data = {
                     title:title,
                     start:newStart, 
@@ -54,6 +59,7 @@ $(document).ready(function() {
                     success:function(res)
                     {
                         console.log(res);
+                        window.location.reload();
                         calendar.fullCalendar("refetchEvents");
                     }
                 });
@@ -73,7 +79,7 @@ $(document).ready(function() {
                 {
                     console.log(res);
                     window.location.reload();
-                    // calendar.fullCalendar("refetchEvents");
+                    
     
                 }
     
@@ -91,7 +97,7 @@ $(document).ready(function() {
                 {
                     console.log(res);
                     window.location.reload();
-                    // calendar.fullCalendar("refetchEvents");
+                    
     
                 }
     
