@@ -3,7 +3,7 @@ var db = require("../models");
 var passport = require("../config/passport");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 var axios = require("axios");
-const moment = require("moment");
+var moment = require("moment");
 
 
 var router = express.Router();
@@ -37,11 +37,12 @@ router.get("/api/calendar/", function(req, res){
 
 //Route to add event to Day Table
 router.post("/api/calendar/", function(req, res){
-    // if (!req.user) {
-    //     return res.redirect("/");
-    // }
+    if (!req.user) {
+        return res.json({
+            status: "not logged in"
+        });
+    }
     
-   
     var data = req.body.data;
     console.log(req.body.date)
     db.Meal.findOrCreate({
@@ -126,8 +127,7 @@ router.post("/api/login/", passport.authenticate("local"), function(req, res) {
 
 //signing up account route
 router.post("/api/signup", function(req, res) {
-    // console.log(req.body.username);
-    // console.log(req.body.password);
+
     db.User.create({
         username: req.body.username,
         password: req.body.password
