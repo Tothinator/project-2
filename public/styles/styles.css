@@ -66,3 +66,7 @@ a:hover {
   width: 100%;
   background-size: cover;
 }
+
+#brand-animation {
+  max-width: 100%;
+}
