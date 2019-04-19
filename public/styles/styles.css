@@ -51,7 +51,7 @@ a:hover {
   line-height: 2.5;
 }
 
-#login-form, #signup-form {
+#signup-form {
   display: none;
 }
 
