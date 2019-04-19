@@ -155,16 +155,21 @@ router.post("/api/meals", function(req, res) {
         defaults: data
     }).then(function(result) {
 
+
         var meal = result[0].dataValues;
 
         console.log(result[0].dataValues);
 
         var id = meal.id;
 
-        if (req.user === undefined) {
-            res.redirect("/");
-        } else if (req.body.table === "favorite") {
+
+        if (req.body.table === "favorite") {
             // add meal to favorites for current user
+
+            // TODO
+            // search the Favotives table for where UserId = req.user.id & MealId = id
+            // if we find something, we need to delete it
+            // otherwise, create it (like below)
 
             db.Favorite.create({
                 UserId: req.user.id,
@@ -187,7 +192,7 @@ router.post("/api/meals", function(req, res) {
 });
 
 router.get("/form", function(req, res) {
-
+    console.log(req.user);
     res.render("form", {
         user: req.user
     });
@@ -234,6 +239,10 @@ router.post("/form", function(req, res) {
         .then(function(response) {
             var data = response.data.hits;
             var meals=[];
+            console.log(data[0]);
+
+            // TODO
+            // make a database query to get all the user's favorites
 
             for (var i = 0; i < data.length; i ++){
 
@@ -247,7 +256,13 @@ router.post("/form", function(req, res) {
                     "ingredientLines": data[i].recipe.ingredientLines,
                     "calories": data[i].recipe.calories,
                     "totalTime": data[i].recipe.totalTime
+                    // "favorited": false
                 };
+
+                // TODO
+                // check to see if the meal is already a favorited meal
+                    // if it is, object.favorited = true;
+                
                 meals.push(object);
             }
 

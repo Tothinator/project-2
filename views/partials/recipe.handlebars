@@ -21,7 +21,25 @@
         <button class="btn btn-primary btn-favorite" data-title="{{label}}" data-image="{{image}}" data-url="{{url}}"
             data-servings="{{yield}}" data-diet="{{dietLabels}}" data-health="{{healthLabels}}"
             data-ingredients="{{ingredientLines}}" data-calories="{{calories}}" data-time="{{totalTime}}">
-            Favorite
+            {{!-- {{#if favorited}}
+                <i class="fas fa-heart"></i>
+            {{else}} --}}
+                <i class="far fa-heart"></i>
+            {{!-- {{/if}} --}}
         </button>
     </div>
 </div>
+
+
+<script>
+
+
+
+</script>
+
+{{!-- 
+empty heart:
+<i class="far fa-heart"></i>
+full heart:
+<i class="fas fa-heart"></i> 
+--}}

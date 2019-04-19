@@ -20,10 +20,11 @@ $("#result").on("click", ".btn-favorite", function() {
         healthLabels: $(this).data("health"),
         ingredients: $(this).data("ingredients"),
         calories: $(this).data("calories"),
-        time: $(this).data("time"),
+        time: $(this).data("time")
     };
 
     console.log(mealData);
+    var favBtn = $(this);
 
     $.ajax("/api/meals", {
         method: "POST",
@@ -32,11 +33,12 @@ $("#result").on("click", ".btn-favorite", function() {
             data: mealData,
             table: "favorite"
         }
-    }).then( function(results){
+    }).then(function(results){
         console.log(results);
         if(results.status === "not logged in") {
             window.location.replace("/");
         }
+        favBtn.children("i").toggleClass("fas far");
     });
 });
 
