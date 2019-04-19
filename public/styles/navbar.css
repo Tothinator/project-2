@@ -45,3 +45,15 @@
     border-radius: 50%;
     color:white;
 }
+#navbarDropdownOptions {
+    display: none;      
+}
+
+@media (max-width: 992px) { 
+    #navbarDropdown {
+        display: none;
+    }
+    #navbarDropdownOptions {
+        display: block;
+    }
+}

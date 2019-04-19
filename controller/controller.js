@@ -245,6 +245,8 @@ router.post("/form", function(req, res) {
             // make a database query to get all the user's favorites
 
             for (var i = 0; i < data.length; i ++){
+                var hours = Math.floor(data[i].recipe.totalTime / 60);
+                var minutes = data[i].recipe.totalTime % 60;
 
                 var object = {
                     "image": data[i].recipe.image,
@@ -255,7 +257,9 @@ router.post("/form", function(req, res) {
                     "healthLabels": data[i].recipe.healthLabels,
                     "ingredientLines": data[i].recipe.ingredientLines,
                     "calories": data[i].recipe.calories,
-                    "totalTime": data[i].recipe.totalTime
+                    "totalTime": data[i].recipe.totalTime,
+                    "minutes": minutes,
+                    "hours": hours
                     // "favorited": false
                 };
 
