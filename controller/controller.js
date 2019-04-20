@@ -9,8 +9,8 @@ var moment = require("moment");
 var router = express.Router();
 
 
-var APIID = process.env.APIID || "ac3e460c";
-var APIKEY = process.env.RECIPEAPI || "4a8c99b69bd19aa9ecf68dd209babee8";
+var APIID = process.env.APIID || "d7d86c16";
+var APIKEY = process.env.RECIPEAPI || "de28b35c4fbd92aecc64e7f389a73879";
 
 var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8";
 
@@ -171,6 +171,7 @@ router.get("/api/user_data", function(req, res) {
 //Route to populate the scheuduled meal cards
 router.get("/members/calendar", function(req, res){
     // console.log(req.user);
+
     if (!req.user) {
         return res.redirect("/");
     }
@@ -178,8 +179,6 @@ router.get("/members/calendar", function(req, res){
     var today = new Date();
     var formatToday = moment(today).toDate();
     var nextWeek = moment(formatToday).add(7, "days").toDate();
-
-
 
     db.Day.findAll({
         attributes: ["id", "date", "MealId"],
@@ -213,9 +212,10 @@ router.get("/members/calendar", function(req, res){
             };
             scheduledMeals.push(data);
         }
+    
         console.log(scheduledMeals);
 
-        res.render("calendar", {scheduledMeal:  scheduledMeals});
+        res.render("calendar", {scheduledMeal:  scheduledMeals, user: req.user});
     });
 
 });
