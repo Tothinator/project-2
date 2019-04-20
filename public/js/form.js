@@ -46,7 +46,13 @@ $("#result").on("click", ".scheduleSubmit", function(event){
 
         .then(function(res){
             console.log(res);
-            alert("Your recipe has been scheduled.");
+            // alert("Your recipe has been scheduled.");
+            swal({
+                title: "Yum!",
+                text: "This recipe has been added to your schedule.",
+                icon: "success",
+                button: "Keep on cookin'!",
+            });
 
         });
 });
