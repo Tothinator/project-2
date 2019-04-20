@@ -30,8 +30,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-var routes = require("./controller/controller.js");
-app.use(routes);
+// var routes = require("./controller/controller.js");
+var loginRoutes = require("./controller/loginController.js");
+var getRoutes = require("./controller/getController.js");
+var postRoutes = require("./controller/postController.js");
+var htmlRoutes = require("./controller/htmlController.js");
+
+app.use(loginRoutes);
+app.use(getRoutes);
+app.use(postRoutes);
+app.use(htmlRoutes);
+// app.use(routes);
 
 var syncOptions = { force: false };
 
