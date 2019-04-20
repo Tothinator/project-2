@@ -9,8 +9,8 @@ var moment = require("moment");
 var router = express.Router();
 
 
-var APIID = process.env.APIID || "ac3e460c";
-var APIKEY = process.env.RECIPEAPI || "4a8c99b69bd19aa9ecf68dd209babee8";
+var APIID = process.env.APIID || "d7d86c16";
+var APIKEY = process.env.RECIPEAPI || "de28b35c4fbd92aecc64e7f389a73879";
 
 var APIURL = "https://api.edamam.com/search?app_id=" + APIID + "&app_key=" + APIKEY + "&from=0&to=8";
 
@@ -42,7 +42,7 @@ router.post("/api/calendar/", function(req, res){
             status: "not logged in"
         });
     }
-    
+
     var data = req.body.data;
     console.log(req.body.date);
     db.Meal.findOrCreate({
@@ -55,7 +55,7 @@ router.post("/api/calendar/", function(req, res){
             }
             console.log(req.body.date);
             var meal = result[0].dataValues;
-            
+
             db.Day.findOrCreate({
                 where: {date: req.body.date,
                     MealId: meal.id},
@@ -77,7 +77,7 @@ router.put("/api/calendar/", function(req, res){
 
     db.Day.update({
         date: req.body.date,
-    }, 
+    },
     { where:
              {
                  id: req.body.id
@@ -99,7 +99,7 @@ router.delete("/api/calendar/", function(req, res){
         console.log(result);
         res.status(200).send();
     });
- 
+
 });
 
 //Route to add favorite Table from calendar
@@ -137,7 +137,7 @@ router.post("/api/signup", function(req, res) {
     }).catch(function(err) {
         console.log("Getting error");
         res.json(err);
-        
+
     });
 });
 
@@ -171,6 +171,7 @@ router.get("/api/user_data", function(req, res) {
 //Route to populate the scheuduled meal cards
 router.get("/members/calendar", function(req, res){
     // console.log(req.user);
+
     if (!req.user) {
         return res.redirect("/");
     }
@@ -179,14 +180,12 @@ router.get("/members/calendar", function(req, res){
     var formatToday = moment(today).toDate();
     var nextWeek = moment(formatToday).add(7, "days").toDate();
 
-
-
     db.Day.findAll({
         attributes: ["id", "date", "MealId"],
         order: ["date"],
         where: {
             UserId: req.user.id,
-            date: { 
+            date: {
                 $between: [formatToday, nextWeek]
             }
         },
@@ -199,7 +198,7 @@ router.get("/members/calendar", function(req, res){
         var scheduledMeals = [];
 
         for(var i = 0; i < results.length; i++){
-            
+
             var formatDate = moment(results[i].date).format("dddd");
 
 
@@ -213,9 +212,10 @@ router.get("/members/calendar", function(req, res){
             };
             scheduledMeals.push(data);
         }
+    
         console.log(scheduledMeals);
 
-        res.render("calendar", {scheduledMeal:  scheduledMeals});
+        res.render("calendar", {scheduledMeal:  scheduledMeals, user: req.user});
     });
 
 });
@@ -223,7 +223,7 @@ router.get("/members/calendar", function(req, res){
 
 router.get("/members/favorites", function(req, res) {
     //Checking if session exists for current user.
-    
+
     console.log(req.user);
     if (!req.user) {
         return res.redirect("/");
@@ -290,7 +290,7 @@ router.get("/", function(req, res) {
 
 
 router.post("/api/meals", function(req, res) {
-    
+
     if (!req.user) {
         return res.json({
             status: "not logged in"
@@ -333,7 +333,7 @@ router.post("/api/meals", function(req, res) {
                 }
             }).then( function (result) {
                 console.log("favorite created: " + result[0]._options.isNewRecord);
-                
+
                 if (result[0]._options.isNewRecord) {
                     res.send("Added meal " + meal.name +
                     " to user's favorites");
@@ -344,7 +344,7 @@ router.post("/api/meals", function(req, res) {
                             MealId: id
                         }
                     }).then( function() {
-                        res.send("Deleted meal " + meal.name + 
+                        res.send("Deleted meal " + meal.name +
                         " from user's favorites");
                     });
                 }
@@ -382,7 +382,7 @@ router.post("/form", function(req, res) {
             msg: "Please fill out one of the three fields to search for recipes."
         });
     }
-    
+
     var health = "";
     var diet = "";
     var food = "";
@@ -417,7 +417,7 @@ router.post("/form", function(req, res) {
             // make a database query to get all the user's favorites
 
             if (req.user) {
-            
+
                 db.Favorite.findAll({
                     where: {
                         UserId: req.user.id,
@@ -427,13 +427,13 @@ router.post("/form", function(req, res) {
                         attributes: ["recipeURL"]
                     }]
                 }).then(function (result) {
-                    
+
                     // console.log(result[0].Meal.recipeURL);
-                    
+
                     for (var i = 0; i < data.length; i ++){
                         var hours = Math.floor(data[i].recipe.totalTime / 60);
                         var minutes = data[i].recipe.totalTime % 60;
-                        
+
                         var object = {
                             "image": data[i].recipe.image,
                             "label": data[i].recipe.label,
@@ -452,18 +452,18 @@ router.post("/form", function(req, res) {
 
                         // TODO
                         // check to see if the meal is already a favorited meal
-                            // if it is, object.favorited = true;
+                        // if it is, object.favorited = true;
                         for (var j = 0; j < result.length; j++){
                             if (object.url === result[j].Meal.recipeURL) {
                                 object.favorited = true;
                                 break;
                             }
                         }
-                        
+
                         meals.push(object);
                     }
 
-                    // console.log(meals); 
+                    // console.log(meals);
 
                     res.render("form", {
                         user: req.user,
@@ -472,11 +472,11 @@ router.post("/form", function(req, res) {
 
                 });
             } else {
-                
+
                 for (var i = 0; i < data.length; i ++){
                     var hours = Math.floor(data[i].recipe.totalTime / 60);
                     var minutes = data[i].recipe.totalTime % 60;
-                    
+
                     var object = {
                         "image": data[i].recipe.image,
                         "label": data[i].recipe.label,
@@ -495,7 +495,7 @@ router.post("/form", function(req, res) {
 
                     meals.push(object);
                 }
-                
+
                 res.render("form", {
                     user: req.user,
                     meals: meals
