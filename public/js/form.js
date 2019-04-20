@@ -46,7 +46,13 @@ $("#result").on("click", ".scheduleSubmit", function(event){
 
         .then(function(res){
             console.log(res);
-            alert("Your recipe has been scheduled.");
+            // alert("Your recipe has been scheduled.");
+            swal({
+                title: "Yum!",
+                text: "This recipe has been added to your schedule.",
+                icon: "success",
+                button: "Keep on cookin'!",
+            });
 
         });
 });
@@ -85,24 +91,17 @@ $("#result").on("click", ".btn-favorite", function() {
         }
         favBtn.children("i").toggleClass("fas far");
     });
-
 });
 
-
 $(function() {
-    var numberCard;
-    //var spaceNumber;
-    //var testArray=[];
-
     if($(".card-text li").length!==0){
-        numberCard=$(".card").length;
-        spaceNumber=parseInt(numberCard/3)+(numberCard%3===0?0:1);
         $("#click").click();
     }
 
     $(".infoCard").hide();
 
     $(document).on("mouseenter", ".card-img-top", function(){
+        $(".infoCard").mouseleave();
         var saveElement=$(this).parent().next();
         if(!$(this).parent().next().hasClass("animated")) {
             $(this).parent().next().show();
@@ -122,10 +121,21 @@ $(function() {
         if($(this).hasClass("animated")) {
             $(this).hide();
             $(this).not(":animated").animate({
-                "z-index":10
+                "z-index":-1
             },600,function(){
                 thisElement.removeClass("animated");
             });
         }  
+    });
+
+    $(document).mousemove(function(event) {
+        var currentMousePos = { x: -1, y: -1 };
+        currentMousePos.x = event.pageX;
+        currentMousePos.y = event.pageY;
+        if($(".animated").parent().find("button").length!==0) {
+            if(currentMousePos.y>$(".animated").parent().find("button").position().top) {
+                $(".infoCard").mouseleave();
+            }
+        }
     });
 });
