@@ -74,17 +74,34 @@ a:hover {
 }
 
 .memberscalendar {
-  margin: 40px;
+  margin: 15px 40px 40px 40px;
   background-color: #FFFFFF;
   color: black;
 }
 .welcome {
-  background-image: url("./images/katie-smith-104748-unsplash.jpg");
-  height: 200px;
+  background-image: url("./images/brooke-lark-230140-unsplash.jpg");
+  height: 300px;
   width: 100%;
   background-size: cover;
+  padding: 20px;
+  color: #3B8686;
+  margin-top: 30px!important;
+}
+.h3class {
+  padding:0;
+}
+#calendarHeader{
+  text-align: center;
+  width:100%;
+  color:#bdeaee;
+  margin-top: 15px !important;
 }
 
 #brand-animation {
   max-width: 100%;
+}
+
+.welcomePage{
+  color:#bdeaee;
+  padding-left: 10px;
 }
