@@ -88,8 +88,44 @@ $("#result").on("click", ".btn-favorite", function() {
 
 });
 
+
 $(function() {
+    var numberCard;
+    //var spaceNumber;
+    //var testArray=[];
+
     if($(".card-text li").length!==0){
+        numberCard=$(".card").length;
+        spaceNumber=parseInt(numberCard/3)+(numberCard%3===0?0:1);
         $("#click").click();
     }
+
+    $(".infoCard").hide();
+
+    $(document).on("mouseenter", ".card-img-top", function(){
+        var saveElement=$(this).parent().next();
+        if(!$(this).parent().next().hasClass("animated")) {
+            $(this).parent().next().show();
+            $(this).parent().next().not(":animated").animate({
+                top:0,
+                width:$(this).parent().width()+1,
+                "z-index":1000,
+                "background-color":"rgb(48,48,48,0.8)"
+            },600,function(){
+                saveElement.addClass("animated");
+            });
+        } 
+    });
+
+    $(document).on("mouseleave", ".infoCard", function(){ 
+        var thisElement=$(this);
+        if($(this).hasClass("animated")) {
+            $(this).hide();
+            $(this).not(":animated").animate({
+                "z-index":10
+            },600,function(){
+                thisElement.removeClass("animated");
+            });
+        }  
+    });
 });

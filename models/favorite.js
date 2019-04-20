@@ -9,8 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         //models.Favorite.hasMany(models.Meal);
         models.Favorite.belongsTo(models.Meal);
         models.Favorite.belongsTo(models.User);
-    
-    
+
     };
 
     return Favorite;

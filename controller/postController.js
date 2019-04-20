@@ -6,7 +6,7 @@ var router = express.Router();
 //GET ROUTES======================================================================================================
 
 router.post("/api/meals", function(req, res) {
-    
+
     if (!req.user) {
         return res.json({
             status: "not logged in"
@@ -14,9 +14,7 @@ router.post("/api/meals", function(req, res) {
     }
     var data = req.body.data;
 
-    // console.log(req.body);
-    // console.log(req.body.url);
-    // console.log(data);
+    console.log(data);
 
 
     db.Meal.findOrCreate({
@@ -29,7 +27,7 @@ router.post("/api/meals", function(req, res) {
 
         var meal = result[0].dataValues;
 
-        // console.log(result[0].dataValues);
+        console.log(result[0].dataValues);
 
         var id = meal.id;
 
@@ -49,7 +47,7 @@ router.post("/api/meals", function(req, res) {
                 }
             }).then( function (result) {
                 console.log("favorite created: " + result[0]._options.isNewRecord);
-                
+
                 if (result[0]._options.isNewRecord) {
                     res.send("Added meal " + meal.name +
                     " to user's favorites");
@@ -60,7 +58,7 @@ router.post("/api/meals", function(req, res) {
                             MealId: id
                         }
                     }).then( function() {
-                        res.send("Deleted meal " + meal.name + 
+                        res.send("Deleted meal " + meal.name +
                         " from user's favorites");
                     });
                 }
@@ -88,7 +86,7 @@ router.post("/api/calendar/", function(req, res){
     }
     
     var data = req.body.data;
-    console.log(req.body.date);
+    // console.log(req.body.date);
     db.Meal.findOrCreate({
         where: {recipeURL: data.recipeURL},
         defaults: data
@@ -97,7 +95,7 @@ router.post("/api/calendar/", function(req, res){
             if (!req.user) {
                 return res.redirect("/");
             }
-            console.log(req.body.date);
+            // console.log(req.body.date);
             var meal = result[0].dataValues;
             
             db.Day.findOrCreate({
@@ -108,8 +106,8 @@ router.post("/api/calendar/", function(req, res){
                     MealId: meal.id,
                     UserId: req.user.id
                 }
-            }).then(function(result){
-                console.log(result);
+            }).then(function(){
+                // console.log(result);
                 res.send("meal has been scheduled");
             });
         });
@@ -165,10 +163,7 @@ router.post("/api/favorites/", function(req, res){
     });
 });
 
-router.delete("/api/favorites", function(req, res) {
-
-
-
-});
+// router.delete("/api/favorites", function(req, res) {
+// });
 
 module.exports = router;

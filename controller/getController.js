@@ -22,10 +22,11 @@ router.get("/api/user_data", function(req, res) {
 });
 
 //Getting calendar data from Day Table
-router.get("/api/calendar/", function(req, res){
+router.get("/api/calendar", function(req, res){
     if (!req.user) {
         return res.redirect("/");
     }
+    console.log("hello");
 
     db.Day.findAll({
         attributes: ["id", "date"],
@@ -35,7 +36,20 @@ router.get("/api/calendar/", function(req, res){
             attributes: ["name", "recipeURL"],
         }]
     }).then(function(calendarResults){
-        res.json(calendarResults);
+        var events = [];
+
+        for (var i = 0; i < calendarResults.length; i++) {
+            event = {
+                id: calendarResults[i].dataValues.id,
+                date: calendarResults[i].dataValues.date,
+                title: calendarResults[i].Meal.name,
+                url: calendarResults[i].Meal.recipeURL
+            };
+            events.push(event);
+        }
+        // console.log(events);
+
+        res.send(events);
     });
 });
 

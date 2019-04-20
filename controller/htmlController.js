@@ -24,7 +24,7 @@ router.get("/form", function(req, res) {
 // Post search results to the form url
 router.post("/form", function(req, res) {
 
-    console.log(req.body);
+    // console.log(req.body);
 
     if (req.body.food === "") {
         console.log("Nothing here");
@@ -33,7 +33,7 @@ router.post("/form", function(req, res) {
             msg: "Please fill out one of the three fields to search for recipes."
         });
     }
-    
+
     var health = "";
     var diet = "";
     var food = "";
@@ -67,20 +67,67 @@ router.post("/form", function(req, res) {
             // TODO
             // make a database query to get all the user's favorites
 
-            db.Favorite.findAll({
-                where: {
-                    UserId: req.user.id,
-                },
-                include: [{
-                    model: db.Meal,
-                    attributes: ["recipeURL"]
-                }]
-            }).then(function (result) {
-                
-                // console.log(result[0].Meal.recipeURL);
-                
+            if (req.user) {
+
+                db.Favorite.findAll({
+                    where: {
+                        UserId: req.user.id,
+                    },
+                    include: [{
+                        model: db.Meal,
+                        attributes: ["recipeURL"]
+                    }]
+                }).then(function (result) {
+
+                    // console.log(result[0].Meal.recipeURL);
+
+                    for (var i = 0; i < data.length; i ++){
+                        var hours = Math.floor(data[i].recipe.totalTime / 60);
+                        var minutes = data[i].recipe.totalTime % 60;
+
+                        var object = {
+                            "image": data[i].recipe.image,
+                            "label": data[i].recipe.label,
+                            "url": data[i].recipe.url,
+                            "yield": data[i].recipe.yield,
+                            "dietLabels": data[i].recipe.dietLabels,
+                            "healthLabels": data[i].recipe.healthLabels,
+                            "ingredientLines": data[i].recipe.ingredientLines,
+                            "calories": data[i].recipe.calories,
+                            "totalTime": data[i].recipe.totalTime,
+                            "favorited": false,
+                            "caloriesPer" : parseInt(data[i].recipe.calories/data[i].recipe.yield),
+                            "minutes": minutes,
+                            "hours": hours
+                        };
+
+                        // TODO
+                        // check to see if the meal is already a favorited meal
+                        // if it is, object.favorited = true;
+                        for (var j = 0; j < result.length; j++){
+                            if (object.url === result[j].Meal.recipeURL) {
+                                object.favorited = true;
+                                break;
+                            }
+                        }
+
+                        meals.push(object);
+                    }
+
+                    // console.log(meals);
+
+                    res.render("form", {
+                        user: req.user,
+                        meals: meals
+                    });
+
+                });
+            } else {
+
                 for (var i = 0; i < data.length; i ++){
-                    
+                    var hours = Math.floor(data[i].recipe.totalTime / 60);
+                    var minutes = data[i].recipe.totalTime % 60;
+
                     var object = {
                         "image": data[i].recipe.image,
                         "label": data[i].recipe.label,
@@ -91,30 +138,20 @@ router.post("/form", function(req, res) {
                         "ingredientLines": data[i].recipe.ingredientLines,
                         "calories": data[i].recipe.calories,
                         "totalTime": data[i].recipe.totalTime,
-                        "favorited": false
+                        "favorited": false,
+                        "caloriesPer" : parseInt(data[i].recipe.calories/data[i].recipe.yield),
+                        "minutes": minutes,
+                        "hours": hours
                     };
 
-                    // TODO
-                    // check to see if the meal is already a favorited meal
-                        // if it is, object.favorited = true;
-                    for (var j = 0; j < result.length; j++){
-                        if (object.url === result[j].Meal.recipeURL) {
-                            object.favorited = true;
-                            break;
-                        }
-                    }
-                    
                     meals.push(object);
                 }
-
-                // console.log(meals); 
 
                 res.render("form", {
                     user: req.user,
                     meals: meals
                 });
-
-            });
+            }
 
         }).catch(function(error) {
             if (error.response) {
@@ -151,7 +188,7 @@ router.get("/members/favorites", function(req, res) {
         .then(function(results){
             //Pull data from database
             var recipeList = results[0].Meals;
-            console.log(recipeList);
+            // console.log(recipeList);
             var recipes = [];
             for (var i = 0; i < recipeList.length; i++){
 
@@ -201,7 +238,7 @@ router.get("/members/calendar", function(req, res){
             attributes: ["name", "image", "recipeURL"],
         }]
     }).then(function(results){
-        console.log(results);
+        // console.log(results);
         var scheduledMeals = [];
 
         for(var i = 0; i < results.length; i++){
@@ -219,9 +256,9 @@ router.get("/members/calendar", function(req, res){
             };
             scheduledMeals.push(data);
         }
-        console.log(scheduledMeals);
+        // console.log(scheduledMeals);
 
-        res.render("calendar", {scheduledMeal:  scheduledMeals});
+        res.render("calendar", {scheduledMeal:  scheduledMeals, user: req.user});
     });
 
 });
