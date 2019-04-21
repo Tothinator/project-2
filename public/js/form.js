@@ -150,5 +150,6 @@ $(function() {
     $(window).resize(function(){
         $(".infoCard").width($(".position").width()+1);
         $("#result form").width($(".position").width());
+        $("#result form").css({top:$("img").height()});
     });
 });
