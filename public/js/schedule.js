@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     var calendar = $("#calendar");
 
-    newCalendar(calendar, "month", true);
+    newCalendar(calendar, "month", true, "month,basicWeek,basicDay");
 
     $(".delete").on("click", function(e){
         e.preventDefault();

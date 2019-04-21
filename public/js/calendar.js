@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-function newCalendar(calendarEl, defaultView, editable, cb) {
+function newCalendar(calendarEl, defaultView, editable, rightHeader, cb) {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         editable: editable,
         defaultView: defaultView,
@@ -7,7 +7,7 @@ function newCalendar(calendarEl, defaultView, editable, cb) {
         header:{
             left:"prev, next today",
             center:"title",
-            right:"month,agendaWeek,agendaDay"
+            right:rightHeader
         },
         eventSources: [
             {

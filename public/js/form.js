@@ -2,10 +2,11 @@ $(function(){
 
     var calendarEL = $("#calendar");
 
-    var calendar = newCalendar(calendarEL, "month", false);
+    var calendar = newCalendar(calendarEL, "month", false, "month,basicWeek");
 
     calendar.dateClick = function(info) {
         var date = info.dateStr;
+        console.log(date);
         $("#schduleDate").val(date);
     };
 
@@ -17,44 +18,56 @@ $(function(){
         }
     });
 
-    $("#result").on("click", ".schedule", function(){
+    $("#result").on("click", ".calendarShow", function(){
 
-        $("#scheduleWithModal").text("When do you want to cook " + $(this).data("title"));
+        var that = $(this);
 
-        ("#scheduleSubmit")
-            .data("title", $(this).data("title"))
-            .data("image", $(this).data("image"))
-            .data("url", $(this).data("url"))
-            .data("servings", $(this).data("servings"))
-            .data("diet", $(this).data("diet"))
-            .data("health", $(this).data("health"))
-            .data("ingredients", $(this).data("ingredients"))
-            .data("calories", $(this).data("calories"))
-            .data("time", $(this).data("time"));
-        // var date = new Date().toISOString().substr(0, 10);
-        // $("input[type=date]").val(date);
+        $.get("/api/user_data").then(function (user) {
+
+            if (!user.username){
+                $("#loginModal").modal("show");
+            } else {
+                $("#scheduleWithModal").text("When do you want to cook " + that.data("title"));
+
+                $("#scheduleSubmit")
+                    .attr("title", that.data("title"))
+                    .attr("image", that.data("image"))
+                    .attr("url", that.data("url"))
+                    .attr("servings", that.data("servings"))
+                    .attr("diet", that.data("diet"))
+                    .attr("health", that.data("health"))
+                    .attr("ingredients", that.data("ingredients"))
+                    .attr("calories", that.data("calories"))
+                    .attr("time", that.data("time"));
+
+                $("#calendarModal").modal("show");
+
+                console.log(scheduleData);
+            }
+        });
+
     });
 
-    $("#result").on("click", "#scheduleSubmit", function(event){
+    $("#scheduleSubmit").on("click", function(event){
         event.preventDefault();
 
         var mealData = {
             data: {
-                name: $(this).data("title"),
-                image: $(this).data("image"),
-                recipeURL: $(this).data("url"),
-                servings: $(this).data("servings"),
-                dietLabels: $(this).data("diet"),
-                healthLabels: $(this).data("health"),
-                ingredients: $(this).data("ingredients"),
-                calories: $(this).data("calories"),
-                time: $(this).data("time")
+                name: $("#scheduleSubmit").attr("title"),
+                image: $("#scheduleSubmit").attr("image"),
+                recipeURL: $("#scheduleSubmit").attr("url"),
+                servings: $("#scheduleSubmit").attr("servings"),
+                dietLabels: $("#scheduleSubmit").attr("diet"),
+                healthLabels: $("#scheduleSubmit").attr("health"),
+                ingredients: $("#scheduleSubmit").attr("ingredients"),
+                calories: $("#scheduleSubmit").attr("calories"),
+                time: $("#scheduleSubmit").attr("time")
             },
 
             date: $("#scheduleDate").val()
         };
         console.log(mealData.date);
-        console.log(mealData.data.recipeURL);
+        console.log(mealData);
 
         $.post("/api/calendar/", mealData)
             .then(function(res){
@@ -66,7 +79,7 @@ $(function(){
                     icon: "success",
                     button: "Keep on cookin'!",
                 });
-                calendar.rerenderEvents();
+                window.location.reload();
             });
     });
 
@@ -100,7 +113,6 @@ $(function(){
                 localStorage.clear();
                 localStorage.setItem(url, JSON.stringify(mealData));
                 $("#loginModal").modal("show");
-                console.log("REEEEEEEEEEEEEEEEEEEEEEEE");
             }
             favBtn.children("i").toggleClass("fas far");
         });

@@ -87,7 +87,7 @@ router.post("/api/calendar/", function(req, res){
     }
     
     var data = req.body.data;
-    // console.log(req.body.date);
+    console.log(data);
     db.Meal.findOrCreate({
         where: {recipeURL: data.recipeURL},
         defaults: data
