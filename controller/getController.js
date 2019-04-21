@@ -1,6 +1,5 @@
 var express = require("express");
 var db = require("../models");
-var moment = require("moment");
 
 var router = express.Router();
 
