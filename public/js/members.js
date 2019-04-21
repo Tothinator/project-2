@@ -6,9 +6,3 @@ $(document).ready(function() {
 
 
 });
-// eventClick: function(calEvent) {
-//     swal({
-//         title: calEvent.title,
-//         icon: "success",
-//     });
-// }

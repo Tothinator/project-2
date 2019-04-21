@@ -8,6 +8,7 @@ var router = express.Router();
 router.post("/api/meals", function(req, res) {
 
     if (!req.user) {
+        console.log("User not logged in");
         return res.json({
             status: "not logged in"
         });
