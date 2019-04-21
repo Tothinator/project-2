@@ -5,7 +5,7 @@ $(document).ready(function() {
             var event={
                 title:data[i].Meal.name,
                 start:data[i].date
-            }
+            };
             events.push(event);
         }
         var d = new Date();
@@ -31,6 +31,5 @@ $(document).ready(function() {
                 });
             }
         });
-
     });
 });
