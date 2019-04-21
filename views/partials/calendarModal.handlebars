@@ -1,0 +1,23 @@
+<!-- Modal -->
+<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="scheduleWithModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scheduleWithModal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{> calendar}}
+            </div>
+            <div class="modal-footer">
+                <form>
+                    <label for="date">When would you like to make this receipe?</label>
+                    <input id="scheduleDate" class="form-control date" type="date">
+                    <button id="scheduleSubmit" class="btn btn-primary" type="submit">Schedule</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

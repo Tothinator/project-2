@@ -1,5 +1,15 @@
 $(function(){
 
+    var calendarEL = $("#calendar");
+
+    var calendar = newCalendar(calendarEL, "month", false, "month,basicWeek");
+
+    calendar.dateClick = function(info) {
+        var date = info.dateStr;
+        console.log(date);
+        $("#schduleDate").val(date);
+    };
+
     $("#accordion").accordion();
 
     $(document).on("keypress",function(e) {
@@ -8,49 +18,56 @@ $(function(){
         }
     });
 
-    $("#result").on("click", "#schedule", function(){
-        if($(this).parent().parent().next().next("form").prop("hidden")){
-            $(this).text("Cancel").css({"color":"red"});
-            $(this).parent().parent().next().next("form").css({
-                top:$("img").height(),
-                width:$(".position").width(),
-                height:"120px",
-                "z-index":1000,
-                "background-color":"rgb(48,48,48,1)"
-            });
+    $("#result").on("click", ".calendarShow", function(){
 
-            $(this).parent().parent().next().next("form").prop("hidden", false);
-            var date = new Date().toISOString().substr(0, 10);
-            $("input[type=date]").val(date);
-        }
-        else{
-            $(this).text("Schedule").css({"color":"white"});
-            $(this).parent().parent().next().next("form").prop("hidden", true);
-            $(this).parent().parent().next().next("form").css({
-                "z-index":-1
-            });
-        }
+        var that = $(this);
+
+        $.get("/api/user_data").then(function (user) {
+
+            if (!user.username){
+                $("#loginModal").modal("show");
+            } else {
+                $("#scheduleWithModal").text("When do you want to cook " + that.data("title"));
+
+                $("#scheduleSubmit")
+                    .attr("title", that.data("title"))
+                    .attr("image", that.data("image"))
+                    .attr("url", that.data("url"))
+                    .attr("servings", that.data("servings"))
+                    .attr("diet", that.data("diet"))
+                    .attr("health", that.data("health"))
+                    .attr("ingredients", that.data("ingredients"))
+                    .attr("calories", that.data("calories"))
+                    .attr("time", that.data("time"));
+
+                $("#calendarModal").modal("show");
+
+                console.log(scheduleData);
+            }
+        });
+
     });
 
-    $("#result").on("click", ".scheduleSubmit", function(event){
+    $("#scheduleSubmit").on("click", function(event){
         event.preventDefault();
-        
-        var mealData = {data: {
-            name: $(this).data("title"),
-            image: $(this).data("image"),
-            recipeURL: $(this).data("url"),
-            servings: $(this).data("servings"),
-            dietLabels: $(this).data("diet"),
-            healthLabels: $(this).data("health"),
-            ingredients: $(this).data("ingredients"),
-            calories: $(this).data("calories"),
-            time: $(this).data("time")
-        },
 
-        date: $(this).parent().find(".date").val()
+        var mealData = {
+            data: {
+                name: $("#scheduleSubmit").attr("title"),
+                image: $("#scheduleSubmit").attr("image"),
+                recipeURL: $("#scheduleSubmit").attr("url"),
+                servings: $("#scheduleSubmit").attr("servings"),
+                dietLabels: $("#scheduleSubmit").attr("diet"),
+                healthLabels: $("#scheduleSubmit").attr("health"),
+                ingredients: $("#scheduleSubmit").attr("ingredients"),
+                calories: $("#scheduleSubmit").attr("calories"),
+                time: $("#scheduleSubmit").attr("time")
+            },
+
+            date: $("#scheduleDate").val()
         };
         console.log(mealData.date);
-        console.log(mealData.data.recipeURL);
+        console.log(mealData);
 
         $.post("/api/calendar/", mealData)
             .then(function(res){
@@ -62,6 +79,7 @@ $(function(){
                     icon: "success",
                     button: "Keep on cookin'!",
                 });
+                window.location.reload();
             });
     });
 
@@ -99,9 +117,7 @@ $(function(){
             favBtn.children("i").toggleClass("fas far");
         });
     });
-});
 
-$(function() {
     if($(".card-text li").length!==0){
         $("#click").click();
     }
@@ -152,4 +168,6 @@ $(function() {
         $("#result form").width($(".position").width());
         $("#result form").css({top:$("img").height()});
     });
+
 });
+

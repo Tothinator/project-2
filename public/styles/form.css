@@ -70,11 +70,9 @@ h3 {
 
 .card {
     overflow:hidden;
-    height:580px;
 }
 
 .card-title {
-    height:120px;
     text-align: center;
 }
 
