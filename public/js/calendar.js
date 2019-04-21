@@ -48,4 +48,6 @@ function newCalendar(calendarEl, defaultView, editable, cb) {
     });
 
     calendar.render();
+
+    return calendar;
 }

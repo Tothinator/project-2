@@ -1,6 +1,15 @@
 
 $(function(){
 
+    var calendarEL = $("#calendar");
+
+    var calendar = newCalendar(calendarEL, "month", false);
+
+    calendar.dateClick = function(info) {
+        var date = info.dateStr;
+        $("#schduleDate").val(date);
+    }
+
     $("#accordion").accordion();
     // $("#init").click();
 
@@ -12,33 +21,40 @@ $(function(){
 
 });
 
-$("#result").on("click", "#schedule", function(){
-    if($(this).next("form").prop("hidden")){
+$("#result").on("click", ".schedule", function(){
 
-        $(this).next("form").prop("hidden", false);
-        var date = new Date().toISOString().substr(0, 10);
-        $("input[type=date]").val(date);
-    }
-    else{
-        $(this).next("form").prop("hidden", true);
-    }
+    $("#scheduleWithModal").text("When do you want to cook " + $(this).data("title"));
+
+    ("#scheduleSubmit")
+        .data("title", $(this).data("title"))
+        .data("image", $(this).data("image"))
+        .data("url", $(this).data("url"))
+        .data("servings", $(this).data("servings"))
+        .data("diet", $(this).data("diet"))
+        .data("health", $(this).data("health"))
+        .data("ingredients", $(this).data("ingredients"))
+        .data("calories", $(this).data("calories"))
+        .data("time", $(this).data("time"));
+    // var date = new Date().toISOString().substr(0, 10);
+    // $("input[type=date]").val(date);
 });
 
-$("#result").on("click", ".scheduleSubmit", function(event){
+$("#result").on("click", "#scheduleSubmit", function(event){
     event.preventDefault();
 
-    var mealData = {data: {
-        name: $(this).data("title"),
-        image: $(this).data("image"),
-        recipeURL: $(this).data("url"),
-        servings: $(this).data("servings"),
-        dietLabels: $(this).data("diet"),
-        healthLabels: $(this).data("health"),
-        ingredients: $(this).data("ingredients"),
-        calories: $(this).data("calories"),
-        time: $(this).data("time")
-    },
-    date: $(this).parents(".card-body").find(".date").val()
+    var mealData = {
+        data: {
+            name: $(this).data("title"),
+            image: $(this).data("image"),
+            recipeURL: $(this).data("url"),
+            servings: $(this).data("servings"),
+            dietLabels: $(this).data("diet"),
+            healthLabels: $(this).data("health"),
+            ingredients: $(this).data("ingredients"),
+            calories: $(this).data("calories"),
+            time: $(this).data("time")
+        },
+        date: $("#scheduleDate").val()
     };
     console.log(mealData.data.recipeURL);
 
@@ -53,7 +69,7 @@ $("#result").on("click", ".scheduleSubmit", function(event){
                 icon: "success",
                 button: "Keep on cookin'!",
             });
-
+            calendar.rerenderEvents();
         });
 });
 
