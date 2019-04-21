@@ -245,11 +245,10 @@ router.get("/members/calendar", function(req, res){
             
             var formatDate = moment(results[i].date).format("dddd");
 
-
             var data = {
                 id: results[i].id,
                 MealId: results[i].MealId,
-                date: formatDate,
+                formatDate: formatDate,
                 title: results[i].Meal.name,
                 url: results[i].Meal.recipeURL,
                 image: results[i].Meal.image
@@ -258,7 +257,7 @@ router.get("/members/calendar", function(req, res){
         }
         // console.log(scheduledMeals);
 
-        res.render("calendar", {scheduledMeal:  scheduledMeals, user: req.user});
+        res.render("schedule", {scheduledMeal:  scheduledMeals, user: req.user});
     });
 
 });

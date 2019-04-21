@@ -1,0 +1,14 @@
+<div class="card-columns" id="week-schedule">
+    {{#each scheduledMeal}}
+    <div class="card" >
+        <img src= {{this.image}} class="card-img-top" alt="...">
+        <div class="card-body">
+        <a href={{this.url}} target="_blank"><h5 class="card-title">{{this.title}}</h5></a>
+        <p>Day: {{this.formatDate}}</p>
+        <button data-id={{this.id}} class="btn btn-primary btn-lg delete"><i class="fas fa-trash-alt"></i>  Remove From Calendar</button>
+        <button data-mealid="{{this.MealId}}" class="btn btn-primary btn-lg favorite"> Add to Favorites</button>
+        </div>
+    </div>
+    {{/each}} 
+</div>
+

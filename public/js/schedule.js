@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
-    newCalendar("month");
+    var calendar = $("#calendar");
+
+    newCalendar(calendar, "month", true);
 
     $(".delete").on("click", function(e){
         e.preventDefault();
@@ -35,3 +37,4 @@ $(document).ready(function() {
         });
     });
 });
+

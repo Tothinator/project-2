@@ -1,8 +1,9 @@
 // eslint-disable-next-line
-function newCalendar(defaultView) {
-    return $("#calendar").fullCalendar({
-        editable:true,
+function newCalendar(calendarEl, defaultView, editable, cb) {
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        editable: editable,
         defaultView: defaultView,
+        navLinks: true,
         header:{
             left:"prev, next today",
             center:"title",
@@ -19,11 +20,10 @@ function newCalendar(defaultView) {
         ],
         selectable:true,
         selectHelper:true,
-        editable:true,
         eventDrop: function(event)
         {
 
-            var newStart = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+            var newStart = moment(event.start).format("Y-MM-DD HH:mm:ss");
 
             var title = event.title;
             var id = event.id;
@@ -41,10 +41,11 @@ function newCalendar(defaultView) {
                 {
                     console.log(res);
                     window.location.reload();
-                    calendar.fullCalendar("refetchEvents");
                 }
             });
         }
 
     });
+
+    calendar.render();
 }

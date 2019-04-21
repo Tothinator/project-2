@@ -1,5 +1,6 @@
 var express = require("express");
 var db = require("../models");
+var moment = require("moment");
 
 var router = express.Router();
 
@@ -33,12 +34,13 @@ router.get("/api/calendar", function(req, res){
         where: {UserId: req.user.id},
         include: [{
             model: db.Meal,
-            attributes: ["name", "recipeURL"],
+            attributes: ["name", "image","recipeURL"],
         }]
     }).then(function(calendarResults){
         var events = [];
 
         for (var i = 0; i < calendarResults.length; i++) {
+
             event = {
                 id: calendarResults[i].dataValues.id,
                 date: calendarResults[i].dataValues.date,
