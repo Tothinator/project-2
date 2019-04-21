@@ -53,16 +53,16 @@ $(function(){
         console.log(mealData.data.recipeURL);
 
         $.post("/api/calendar/", mealData)
-        .then(function(res){
-            console.log(res);
-            // alert("Your recipe has been scheduled.");
-            swal({
-                title: "Yum!",
-                text: "This recipe has been added to your schedule.",
-                icon: "success",
-                button: "Keep on cookin'!",
+            .then(function(res){
+                console.log(res);
+                // alert("Your recipe has been scheduled.");
+                swal({
+                    title: "Yum!",
+                    text: "This recipe has been added to your schedule.",
+                    icon: "success",
+                    button: "Keep on cookin'!",
+                });
             });
-        });
     });
 
     $("#result").on("click", ".btn-favorite", function() {
