@@ -3,21 +3,26 @@
     margin:0 auto;
     background-color:rgba(240, 248, 255, 0.4);
 }
+
 ul { 
     list-style-type: none; 
     padding-left: 0;
 }
+
 li {
     padding-left: 20px;
 }
+
 label.title { 
     font-weight: bold; 
     width: 80px; 
     float: left; 
 }
+
 div.centered {  
     text-align: center; 
 }
+
 fieldset {
     display: block;
     margin-inline-start: 2px;
@@ -33,6 +38,7 @@ fieldset {
     border-image: initial;
     margin: 15px 10px; 
 }
+
 fieldset legend { 
     font-weight: bold; 
     font-size: 18px; 
@@ -40,23 +46,20 @@ fieldset legend {
     width:120px;
     text-align: center; 
 }
+
 ul li { 
     margin-bottom: 10px; 
 }
+
 h3 {
     padding: 10px;
     margin: 0;
 }
-/* .search-bar {
-    background-image: url("./images/erol-ahmed-296514-unsplash.jpg");
-    background-size: cover;
-} */
+
 .btn-primary {
     margin: 5px;
 }
-/* .card {
-   margin: 10px;
-} */
+
 .bold {
     font-weight: bold;
 }
@@ -79,17 +82,6 @@ h3 {
     overflow:hidden;
 }
 
-
-.card-body {
-    /* position: absolute;              
-    z-index: 1000;     
-    top:100px;              */
-    /* padding: 50px;
-    background-color: #555; */
-    /* height:1000px; */
-
-}
-
 #accodion {
     width:100%;
 }
@@ -97,7 +89,6 @@ h3 {
 #result {
     width:100%;
 }
-/* */
 
 .position {
     position: relative;
@@ -115,4 +106,8 @@ h3 {
     position: absolute;
     margin:0;
     padding:0;
+}
+
+.scheduled-container .card {
+    height:700px;
 }
