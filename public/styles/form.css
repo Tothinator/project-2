@@ -110,3 +110,9 @@ h3 {
     margin:0;
     padding:0;
 }
+
+#result form{
+    position: absolute;
+    margin:0;
+    padding:0;
+}

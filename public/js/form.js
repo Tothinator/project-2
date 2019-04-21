@@ -13,14 +13,24 @@ $(function(){
 });
 
 $("#result").on("click", "#schedule", function(){
-    if($(this).next("form").prop("hidden")){
+    if($(this).parent().parent().next().next("form").prop("hidden")){
+        $(this).parent().parent().next().next("form").css({
+            top:$(".card").height()-10,
+            width:$(".position").width()+1,
+            height:"120px",
+            "z-index":1000,
+            "background-color":"rgb(48,48,48,1)"
+        });
 
-        $(this).next("form").prop("hidden", false);
+        $(this).parent().parent().next().next("form").prop("hidden", false);
         var date = new Date().toISOString().substr(0, 10);
         $("input[type=date]").val(date);
     }
     else{
-        $(this).next("form").prop("hidden", true);
+        $(this).parent().parent().next().next("form").prop("hidden", true);
+        $(this).parent().parent().next().next("form").css({
+            "z-index":-1
+        });
     }
 });
 
@@ -38,8 +48,10 @@ $("#result").on("click", ".scheduleSubmit", function(event){
         calories: $(this).data("calories"),
         time: $(this).data("time")
     },
-    date: $(this).parents(".card-body").find(".date").val()
+    //date: $(this).parents(".card-body").find(".date").val()
+    date: $(this).parent().find(".date").val()
     };
+    console.log(mealData.date);
     console.log(mealData.data.recipeURL);
 
     $.post("/api/calendar/", mealData)
@@ -53,10 +65,8 @@ $("#result").on("click", ".scheduleSubmit", function(event){
                 icon: "success",
                 button: "Keep on cookin'!",
             });
-
         });
 });
-
 
 $("#result").on("click", ".btn-favorite", function() {
 
@@ -137,5 +147,10 @@ $(function() {
                 $(".infoCard").mouseleave();
             }
         }
+    });
+
+    $(window).resize(function(){
+        $(".infoCard").width($(".position").width()+1);
+        $("#result form").width($(".position").width()+1);
     });
 });
