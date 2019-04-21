@@ -1,8 +1,6 @@
-
 $(function(){
 
     $("#accordion").accordion();
-    // $("#init").click();
 
     $(document).on("keypress",function(e) {
         if(e.which === 13) {
@@ -10,96 +8,96 @@ $(function(){
         }
     });
 
-});
-
-$("#result").on("click", "#schedule", function(){
-    if($(this).parent().parent().next().next("form").prop("hidden")){
-        $(this).parent().parent().next().next("form").css({
-            top:$(".card").height()-10,
-            width:$(".position").width()+1,
-            height:"120px",
-            "z-index":1000,
-            "background-color":"rgb(48,48,48,1)"
-        });
-
-        $(this).parent().parent().next().next("form").prop("hidden", false);
-        var date = new Date().toISOString().substr(0, 10);
-        $("input[type=date]").val(date);
-    }
-    else{
-        $(this).parent().parent().next().next("form").prop("hidden", true);
-        $(this).parent().parent().next().next("form").css({
-            "z-index":-1
-        });
-    }
-});
-
-$("#result").on("click", ".scheduleSubmit", function(event){
-    event.preventDefault();
-
-    var mealData = {data: {
-        name: $(this).data("title"),
-        image: $(this).data("image"),
-        recipeURL: $(this).data("url"),
-        servings: $(this).data("servings"),
-        dietLabels: $(this).data("diet"),
-        healthLabels: $(this).data("health"),
-        ingredients: $(this).data("ingredients"),
-        calories: $(this).data("calories"),
-        time: $(this).data("time")
-    },
-    //date: $(this).parents(".card-body").find(".date").val()
-    date: $(this).parent().find(".date").val()
-    };
-    console.log(mealData.date);
-    console.log(mealData.data.recipeURL);
-
-    $.post("/api/calendar/", mealData)
-
-        .then(function(res){
-            console.log(res);
-            // alert("Your recipe has been scheduled.");
-            swal({
-                title: "Yum!",
-                text: "This recipe has been added to your schedule.",
-                icon: "success",
-                button: "Keep on cookin'!",
+    $("#result").on("click", "#schedule", function(){
+        if($(this).parent().parent().next().next("form").prop("hidden")){
+            $(this).text("Cancel").css({"color":"red"});
+            $(this).parent().parent().next().next("form").css({
+                top:$("img").height(),
+                width:$(".position").width(),
+                height:"120px",
+                "z-index":1000,
+                "background-color":"rgb(48,48,48,1)"
             });
+
+            $(this).parent().parent().next().next("form").prop("hidden", false);
+            var date = new Date().toISOString().substr(0, 10);
+            $("input[type=date]").val(date);
+        }
+        else{
+            $(this).text("Schedule").css({"color":"white"});
+            $(this).parent().parent().next().next("form").prop("hidden", true);
+            $(this).parent().parent().next().next("form").css({
+                "z-index":-1
+            });
+        }
+    });
+
+    $("#result").on("click", ".scheduleSubmit", function(event){
+        event.preventDefault();
+        
+        var mealData = {data: {
+            name: $(this).data("title"),
+            image: $(this).data("image"),
+            recipeURL: $(this).data("url"),
+            servings: $(this).data("servings"),
+            dietLabels: $(this).data("diet"),
+            healthLabels: $(this).data("health"),
+            ingredients: $(this).data("ingredients"),
+            calories: $(this).data("calories"),
+            time: $(this).data("time")
+        },
+
+        date: $(this).parent().find(".date").val()
+        };
+        console.log(mealData.date);
+        console.log(mealData.data.recipeURL);
+
+        $.post("/api/calendar/", mealData)
+            .then(function(res){
+                console.log(res);
+                // alert("Your recipe has been scheduled.");
+                swal({
+                    title: "Yum!",
+                    text: "This recipe has been added to your schedule.",
+                    icon: "success",
+                    button: "Keep on cookin'!",
+                });
+            });
+    });
+
+    $("#result").on("click", ".btn-favorite", function() {
+
+        var url = $(this).data("url");
+        var mealData = {
+            name: $(this).data("title"),
+            image: $(this).data("image"),
+            servings: $(this).data("servings"),
+            dietLabels: $(this).data("diet"),
+            healthLabels: $(this).data("health"),
+            ingredients: $(this).data("ingredients"),
+            calories: $(this).data("calories"),
+            time: $(this).data("time")
+        };
+
+        console.log(mealData);
+        var favBtn = $(this);
+
+        $.ajax("/api/meals", {
+            method: "POST",
+            data: {
+                url: url,
+                data: mealData,
+                table: "favorite"
+            }
+        }).then(function(results){
+            console.log(results);
+            if(results.status === "not logged in") {
+                localStorage.clear();
+                localStorage.setItem(url, JSON.stringify(mealData));
+                $("#loginModal").modal("show");
+            }
+            favBtn.children("i").toggleClass("fas far");
         });
-});
-
-$("#result").on("click", ".btn-favorite", function() {
-
-    var url = $(this).data("url");
-    var mealData = {
-        name: $(this).data("title"),
-        image: $(this).data("image"),
-        servings: $(this).data("servings"),
-        dietLabels: $(this).data("diet"),
-        healthLabels: $(this).data("health"),
-        ingredients: $(this).data("ingredients"),
-        calories: $(this).data("calories"),
-        time: $(this).data("time")
-    };
-
-    console.log(mealData);
-    var favBtn = $(this);
-
-    $.ajax("/api/meals", {
-        method: "POST",
-        data: {
-            url: url,
-            data: mealData,
-            table: "favorite"
-        }
-    }).then(function(results){
-        console.log(results);
-        if(results.status === "not logged in") {
-            localStorage.clear();
-            localStorage.setItem(url, JSON.stringify(mealData));
-            $("#loginModal").modal("show");
-        }
-        favBtn.children("i").toggleClass("fas far");
     });
 });
 
@@ -151,6 +149,6 @@ $(function() {
 
     $(window).resize(function(){
         $(".infoCard").width($(".position").width()+1);
-        $("#result form").width($(".position").width()+1);
+        $("#result form").width($(".position").width());
     });
 });
