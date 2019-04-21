@@ -100,6 +100,7 @@ $(function(){
                 localStorage.clear();
                 localStorage.setItem(url, JSON.stringify(mealData));
                 $("#loginModal").modal("show");
+                console.log("REEEEEEEEEEEEEEEEEEEEEEEE");
             }
             favBtn.children("i").toggleClass("fas far");
         });
