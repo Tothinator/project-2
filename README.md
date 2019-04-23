@@ -1,4 +1,4 @@
-# project-2
+# Mise En Place
 
 Mise en Place on [Heroku](https://murmuring-brushlands-67751.herokuapp.com/)
 
